@@ -13,17 +13,6 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
-        'email',
-        'password',
-        'type',
-        'reset_token',
+        'token'
     ];
-
-    public static function booted()
-    {
-        self::creating(function (User $record) {
-            $record->id = Str::ulid();
-            $record->reset_token = Str::random();
-        });
-    }
 }

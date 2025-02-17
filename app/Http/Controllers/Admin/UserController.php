@@ -17,12 +17,9 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required|max:255|email|unique:users,email',
-            'password' => 'required|min:8|max:255',
-            'type' => 'required|max:255'
+            'id' => 'required|max:255|unique:users,id',
+            'token' => 'required|max:255|unique:users,token',
         ]);
-
-        $validated['password'] = Hash::make($validated['password']);
 
         $record = Model::create($validated);
         $code = 201;
