@@ -14,12 +14,38 @@ class UserController extends Controller
 {
     public $model = "User";
 
+    public $relations = ['profile'];
+
+    public function getAll()
+    {
+        $records = Model::with($this->relations)->get();
+        $code = 200;
+        $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
+        return response()->json($response, $code);
+    }
+
+    public function get($id)
+    {
+        $record = Model::with($this->relations)->where('id', $id)->first();
+        if ($record) {
+            $code = 200;
+            $response = ['message' => "Fetched $this->model", 'record' => $record];
+        } else {
+            $code = 404;
+            $response = ['message' => "$this->model Not Found"];
+        }
+        return response()->json($response, $code);
+    }
+
     public function create(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required|max:255|unique:users,id',
-            'token' => 'required|max:255|unique:users,token',
+            'email' => 'required|max:255|email|unique:users,email',
+            'password' => 'required|min:8|max:255',
+            'type' => 'required|max:255'
         ]);
+
+        $validated['password'] = Hash::make($validated['password']);
 
         $record = Model::create($validated);
         $code = 201;
@@ -38,9 +64,9 @@ class UserController extends Controller
         ]);
 
         $record = Model::where('email', $validated['email'])->first();
-        $validPassword = Hash::check($validated['password'], $record->password);
+        $isValid = Hash::check($validated['password'], $record->password);
 
-        if ($record && $validPassword) {
+        if ($record && $isValid) {
             $record->tokens()->delete();
             $token = $record->createToken("$record->email-AuthToken")->plainTextToken;
             $code = 200;
