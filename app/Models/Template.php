@@ -10,9 +10,6 @@ class Template extends Model
 {
     use HasFactory, HasUlids;
 
-    protected $keyType = 'string';
-    public $incrementing = false;
-
     protected $fillable = [
         'name',
         'content',
