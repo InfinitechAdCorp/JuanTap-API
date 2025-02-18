@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,5 +30,13 @@ Route::middleware('auth.admin')->group(function () {
         Route::get('{id}', [UserController::class, 'get']);
         Route::put('', [UserController::class, 'update']);
         Route::post('/logout', [UserController::class, 'logout']);
+    });
+
+    Route::prefix('profiles')->group(function () {
+        Route::get('', [ProfileController::class, 'getAll']);
+        Route::get('{id}', [ProfileController::class, 'get']);
+        Route::post('', [ProfileController::class, 'create']);
+        Route::put('', [ProfileController::class, 'update']);
+        Route::delete('{id}', [ProfileController::class, 'delete']);
     });
 });
