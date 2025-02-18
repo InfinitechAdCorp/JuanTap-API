@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 class Profile extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUlids;
 
     protected $keyType = 'string';
     public $incrementing = false;
@@ -27,13 +27,6 @@ class Profile extends Model
         'company',
         'avatar',
     ];
-
-    public static function booted()
-    {
-        static::creating(function (Profile $record) {
-            $record->id = Str::ulid();
-        });
-    }
 
     public function user(): BelongsTo
     {

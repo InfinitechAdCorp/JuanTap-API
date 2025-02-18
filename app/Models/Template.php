@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 class Template extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUlids;
 
     protected $keyType = 'string';
     public $incrementing = false;
@@ -17,11 +17,4 @@ class Template extends Model
         'name',
         'content',
     ];
-
-    public static function booted()
-    {
-        static::creating(function (Template $record) {
-            $record->id = Str::ulid();
-        });
-    }
 }
