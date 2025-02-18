@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\TemplateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,5 +37,13 @@ Route::middleware('auth.admin')->group(function () {
         Route::post('', [ProfileController::class, 'create']);
         Route::put('', [ProfileController::class, 'update']);
         Route::delete('{id}', [ProfileController::class, 'delete']);
+    });
+
+    Route::prefix('templates')->group(function () {
+        Route::get('', [TemplateController::class, 'getAll']);
+        Route::get('{id}', [TemplateController::class, 'get']);
+        Route::post('', [TemplateController::class, 'create']);
+        Route::put('', [TemplateController::class, 'update']);
+        Route::delete('{id}', [TemplateController::class, 'delete']);
     });
 });
