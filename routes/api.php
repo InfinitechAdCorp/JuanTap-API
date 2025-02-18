@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\TemplateController;
+use App\Http\Controllers\Admin\SubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,5 +46,13 @@ Route::middleware('auth.admin')->group(function () {
         Route::post('', [TemplateController::class, 'create']);
         Route::put('', [TemplateController::class, 'update']);
         Route::delete('{id}', [TemplateController::class, 'delete']);
+    });
+
+    Route::prefix('subscriptions')->group(function () {
+        Route::get('', [SubscriptionController::class, 'getAll']);
+        Route::get('{id}', [SubscriptionController::class, 'get']);
+        Route::post('', [SubscriptionController::class, 'create']);
+        Route::put('', [SubscriptionController::class, 'update']);
+        Route::delete('{id}', [SubscriptionController::class, 'delete']);
     });
 });

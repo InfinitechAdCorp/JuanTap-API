@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 class Subscription extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUlids;
 
     protected $fillable = [
         'user_id',
