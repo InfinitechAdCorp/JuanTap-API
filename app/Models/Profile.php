@@ -16,6 +16,7 @@ class Profile extends Model
 
     protected $fillable = [
         'user_id',
+        'template_id',
         'position',
         'phone',
         'facebook',

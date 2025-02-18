@@ -17,6 +17,7 @@ class ProfileController extends Controller
 
     public $rules = [
         'user_id' => 'required|exists:users,id',
+        'template_id' => 'required|exists:templates,id',
         'position' => 'required|max:255',
         'phone' => 'required|max:255',
         'facebook' => 'required|max:255',

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('profiles', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id');
+            $table->foreignUlid('template_id');
             $table->string('position');
             $table->string('phone');
             $table->string('facebook');
