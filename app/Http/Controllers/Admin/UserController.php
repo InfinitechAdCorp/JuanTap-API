@@ -56,6 +56,29 @@ class UserController extends Controller
         return response()->json($response, $code);
     }
 
+    public function upsert(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|max:255|email',
+            'password' => 'required|min:8|max:255',
+            'type' => 'nullable|max:255'
+        ]);
+
+        $validated['password'] = Hash::make($validated['password']);
+
+        $record = Model::updateOrCreate(
+            ['email' => $validated['email']],
+            $validated
+        );
+
+        $code = $record->wasRecentlyCreated ? 201 : 200;
+        $response = [
+            'message' => $record->wasRecentlyCreated ? "Created $this->model" : "Updated $this->model",
+            'record' => $record,
+        ];
+        return response()->json($response, $code);
+    }
+
     public function login(Request $request)
     {
         $validated = $request->validate([
