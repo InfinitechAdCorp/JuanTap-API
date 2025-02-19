@@ -15,7 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('type');
+            $table->string('type')->default('User');
             $table->string('reset_token');
             $table->timestamps();
         });

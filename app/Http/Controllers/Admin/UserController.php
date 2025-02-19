@@ -42,7 +42,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'email' => 'required|max:255|email|unique:users,email',
             'password' => 'required|min:8|max:255',
-            'type' => 'required|max:255'
+            'type' => 'nullable|max:255'
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
