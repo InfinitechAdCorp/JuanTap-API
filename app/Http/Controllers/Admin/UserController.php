@@ -37,22 +37,30 @@ class UserController extends Controller
         return response()->json($response, $code);
     }
 
-    public function create(Request $request)
+    public function create(Request $request, $provider)
     {
-        $validated = $request->validate([
-            'email' => 'required|max:255|email|unique:users,email',
-            'password' => 'required|min:8|max:255',
-            'type' => 'nullable|max:255'
-        ]);
+        if ($provider == "google") {
+            $validated = $request->validate([
+                'email' => 'required|max:255|email|unique:users,email',
+                'password' => 'nullable|min:8|max:255',
+                'type' => 'nullable|max:255'
+            ]);
+        } else {
+            $validated = $request->validate([
+                'email' => 'required|max:255|email|unique:users,email',
+                'password' => 'required|min:8|max:255',
+                'type' => 'nullable|max:255'
+            ]);
 
-        $validated['password'] = Hash::make($validated['password']);
-
+            $validated['password'] = Hash::make($validated['password']);
+        }
         $record = Model::create($validated);
         $code = 201;
         $response = [
             'message' => "Created $this->model",
             'record' => $record,
         ];
+
         return response()->json($response, $code);
     }
 
