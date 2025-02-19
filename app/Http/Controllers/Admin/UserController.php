@@ -63,24 +63,31 @@ class UserController extends Controller
             'password' => 'required|min:8',
         ]);
 
-        $record = Model::where('email', $validated['email'])->first();
-        $isValid = Hash::check($validated['password'], $record->password);
+        $code = 200;
 
-        if ($record && $isValid) {
-            $record->tokens()->delete();
-            $token = $record->createToken("$record->email-AuthToken")->plainTextToken;
-            $code = 200;
-            $response = [
-                'message' => 'Logged In Successfully',
-                'token' => $token,
-                'record' => $record,
-            ];
-        } else {
-            $code = 401;
-            $response = [
-                'message' => 'Invalid Credentials',
-            ];
-        }
+        $response = [
+            'email' => $validated['email'],
+            'password' => $validated['password'],
+        ];
+
+        // $record = Model::where('email', $validated['email'])->first();
+        // $isValid = Hash::check($validated['password'], $record->password);
+
+        // if ($record && $isValid) {
+        //     $record->tokens()->delete();
+        //     $token = $record->createToken("$record->email-AuthToken")->plainTextToken;
+        //     $code = 200;
+        //     $response = [
+        //         'message' => 'Logged In Successfully',
+        //         'token' => $token,
+        //         'record' => $record,
+        //     ];
+        // } else {
+        //     $code = 401;
+        //     $response = [
+        //         'message' => 'Invalid Credentials',
+        //     ];
+        // }
         return response()->json($response, $code);
     }
 
