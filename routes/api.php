@@ -19,7 +19,7 @@ use App\Http\Controllers\Admin\SubscriptionController;
 */
 
 Route::prefix('users')->group(function () {
-    Route::post('{provider}', [UserController::class, 'create']);
+    Route::post('', [UserController::class, 'upsert']);
     Route::post('/login', [UserController::class, 'login']);
     Route::post('request-reset', [UserController::class, 'requestReset']);
     Route::post('/reset-password', [UserController::class, 'resetPassword']);
