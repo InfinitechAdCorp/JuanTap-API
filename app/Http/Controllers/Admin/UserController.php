@@ -39,11 +39,7 @@ class UserController extends Controller
 
     public function getByEmail(Request $request)
     {
-        $validated = $request->validate([
-            'email' => 'required|max:255|email|exists:users,email',
-        ]);
-
-        $record = Model::with($this->relations)->where('email', $validated['email'])->first();
+        $record = Model::with($this->relations)->where('email', $request->email)->first();
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
