@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('type')->default('User');
             $table->string('provider')->nullable();
             $table->string('provider_account_id')->nullable();
+            $table->string('access_token')->nullable();
             $table->string('reset_token');
             $table->timestamps();
         });

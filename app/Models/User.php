@@ -20,6 +20,7 @@ class User extends Authenticatable
         'type',
         'provider',
         'provider_account_id',
+        'access_token',
         'reset_token',
     ];
 

@@ -58,6 +58,7 @@ class UserController extends Controller
             'type' => 'nullable|max:255',
             'provider' => 'required|max:255',
             'provider_account_id' => 'required|max:255',
+            'access_token' => 'required|max:255',
         ]);
 
         $record = Model::find($validated['id']);
