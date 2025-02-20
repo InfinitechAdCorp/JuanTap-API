@@ -41,13 +41,13 @@ class UserController extends Controller
     {
         if ($provider == "google") {
             $validated = $request->validate([
-                'email' => 'required|max:255|email|unique:users,email',
+                'email' => 'required|max:255|email',
                 'password' => 'nullable|min:8|max:255',
                 'type' => 'nullable|max:255'
             ]);
         } else {
             $validated = $request->validate([
-                'email' => 'required|max:255|email|unique:users,email',
+                'email' => 'required|max:255|email',
                 'password' => 'required|min:8|max:255',
                 'type' => 'nullable|max:255'
             ]);
