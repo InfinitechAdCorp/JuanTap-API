@@ -79,7 +79,10 @@ class UserController extends Controller
             $validated = $request->validate([
                 'email' => 'required|max:255|email',
                 'password' => 'nullable|min:8|max:255',
-                'type' => 'nullable|max:255'
+                'type' => 'nullable|max:255',
+                'provider' => 'required|max:255',
+                'provider_account_id' => 'required|max:255',
+                'access_token' => 'required|max:255',
             ]);
         } else {
             $validated = $request->validate([
