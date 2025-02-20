@@ -37,6 +37,46 @@ class UserController extends Controller
         return response()->json($response, $code);
     }
 
+    public function getByEmail(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|max:255|email|exists:users,email',
+        ]);
+
+        $record = Model::with($this->relations)->where('email', $validated['email'])->first();
+        if ($record) {
+            $code = 200;
+            $response = ['message' => "Fetched $this->model", 'record' => $record];
+        } else {
+            $code = 404;
+            $response = ['message' => "$this->model Not Found"];
+        }
+        return response()->json($response, $code);
+    }
+
+    public function linkOAuth(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|max:255|email|exists:users,email',
+            'password' => 'nullable|min:8|max:255',
+            'type' => 'nullable|max:255',
+            'provider' => 'required|max:255',
+            'provider_account_id' => 'required|max:255',
+        ]);
+
+        $record = Model::where('email', $validated['email'])->first();
+        $validated['password'] = null;
+        $record->update($validated);
+
+        $code = 200;
+        $response = [
+            'message' => "Account Linked",
+            'record' => $record,
+        ];
+
+        return response()->json($response, $code);
+    }
+
     public function upsert(Request $request, $provider)
     {
         if ($provider == "google") {
@@ -66,7 +106,7 @@ class UserController extends Controller
 
         return response()->json($response, $code);
     }
-    
+
     public function login(Request $request)
     {
         $validated = $request->validate([

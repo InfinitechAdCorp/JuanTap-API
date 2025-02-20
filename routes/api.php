@@ -19,17 +19,19 @@ use App\Http\Controllers\Admin\SubscriptionController;
 */
 
 Route::prefix('users')->group(function () {
+    Route::post('by-email', [UserController::class, 'getByEmail']);
     Route::post('{provider}', [UserController::class, 'upsert']);
-    Route::post('/login', [UserController::class, 'login']);
+    Route::post('login', [UserController::class, 'login']);
     Route::post('request-reset', [UserController::class, 'requestReset']);
-    Route::post('/reset-password', [UserController::class, 'resetPassword']);
+    Route::post('reset-password', [UserController::class, 'resetPassword']);
+
 });
 
 Route::middleware('auth.admin')->group(function () {
     Route::prefix('users')->group(function () {
         Route::get('', [UserController::class, 'getAll']);
         Route::get('{id}', [UserController::class, 'get']);
-        Route::post('/logout', [UserController::class, 'logout']);
+        Route::post('logout', [UserController::class, 'logout']);
     });
 
     Route::prefix('profiles')->group(function () {

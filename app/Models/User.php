@@ -18,6 +18,8 @@ class User extends Authenticatable
         'email',
         'password',
         'type',
+        'provider',
+        'provider_account_id',
         'reset_token',
     ];
 
