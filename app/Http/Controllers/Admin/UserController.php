@@ -39,13 +39,19 @@ class UserController extends Controller
 
     public function getByEmail(Request $request)
     {
-        $record = Model::with($this->relations)->where('email', $request->email)->first();
+        $record = Model::with($this->relations)->where('provider_account_id', $request->provider_account_id)->first();
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
         } else {
-            $code = 404;
-            $response = ['message' => "$this->model Not Found"];
+            $record = Model::with($this->relations)->where('email', $request->email)->first();
+            if ($record) {
+                $code = 200;
+                $response = ['message' => "Fetched $this->model", 'record' => $record];
+            } else {
+                $code = 404;
+                $response = ['message' => "$this->model Not Found"];
+            }
         }
         return response()->json($response, $code);
     }
