@@ -61,7 +61,6 @@ class UserController extends Controller
         ]);
 
         $record = Model::find($validated['id']);
-        $validated['password'] = null;
         $record->update($validated);
 
         $code = 200;
