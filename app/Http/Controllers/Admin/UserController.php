@@ -53,14 +53,14 @@ class UserController extends Controller
     public function linkOAuth(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required|max:255|email|exists:users,email',
+            'id' => 'required|max:255|email|exists:users,id',
             'password' => 'nullable|min:8|max:255',
             'type' => 'nullable|max:255',
             'provider' => 'required|max:255',
             'provider_account_id' => 'required|max:255',
         ]);
 
-        $record = Model::where('email', $validated['email'])->first();
+        $record = Model::find($validated['id']);
         $validated['password'] = null;
         $record->update($validated);
 
