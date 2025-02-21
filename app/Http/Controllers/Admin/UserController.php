@@ -96,7 +96,7 @@ class UserController extends Controller
         return response()->json($response, $code);
     }
 
-    public function create(Request $request)
+    public function upsert(Request $request)
     {
         $provider = strtolower($request->provider);
 

@@ -21,7 +21,7 @@ use App\Http\Controllers\Admin\SubscriptionController;
 Route::prefix('users')->group(function () {
     Route::post('by-email', [UserController::class, 'getByEmail']);
     Route::post('link-oauth', [UserController::class, 'linkOAuth']);
-    Route::post('', [UserController::class, 'create']);
+    Route::post('', [UserController::class, 'upsert']);
 });
 
 Route::middleware('auth.admin')->group(function () {
