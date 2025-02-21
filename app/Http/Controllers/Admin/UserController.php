@@ -139,7 +139,7 @@ class UserController extends Controller
         }
 
         $code = $record->wasRecentlyCreated ? 201 : 200;
-        $action = $code == 200 ? "Created" : "Updated";
+        $action = $code == 201 ? "Created" : "Updated";
         $response = [
             'message' => "$action $this->model",
             'record' => $record,
