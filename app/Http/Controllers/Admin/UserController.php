@@ -140,7 +140,7 @@ class UserController extends Controller
 
         $code = $record->wasRecentlyCreated ? 201 : 200;
         $response = [
-            'message' => "Created $this->model",
+            'message' => $code == 200 ? "Created" : "Updated" . " $this->model",
             'record' => $record,
         ];
         return response()->json($response, $code);
