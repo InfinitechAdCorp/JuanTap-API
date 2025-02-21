@@ -2,33 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
-use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasUlids;
+    use HasFactory, HasUlids, HasApiTokens, Notifiable;
 
     protected $fillable = [
         'email',
         'password',
         'type',
-        'provider',
-        'provider_account_id',
-        'access_token',
-        'reset_token',
     ];
 
-    public static function booted()
+    public function provider(): HasOne
     {
-        self::creating(function (User $record) {
-            $record->reset_token = Str::random();
-        });
+        return $this->hasOne(Provider::class);
     }
 
     public function profile(): HasOne
