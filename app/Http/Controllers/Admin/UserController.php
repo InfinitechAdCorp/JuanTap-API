@@ -123,7 +123,7 @@ class UserController extends Controller
             ['email' => $validated['email']],
             [
                 'email' => $validated['email'],
-                'password' => $validated['password'],
+                'password' => $validated['password'] ?? null,
                 'type' => $validated['type'] ?? "User",
             ]
         );
