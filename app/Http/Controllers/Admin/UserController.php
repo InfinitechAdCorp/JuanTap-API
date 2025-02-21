@@ -98,7 +98,9 @@ class UserController extends Controller
 
     public function create(Request $request)
     {
-        if ($request->provider == "google") {
+        $provider = strtolower($request->provider);
+
+        if ($provider == "google") {
             $validated = $request->validate([
                 'email' => 'required|max:255|email',
                 'password' => 'nullable|min:8|max:255',
@@ -126,7 +128,7 @@ class UserController extends Controller
             ]
         );
 
-        if ($request->provider) {
+        if ($provider) {
             Provider::updateOrCreate(
                 ['user_id' => $record->id],
                 [
