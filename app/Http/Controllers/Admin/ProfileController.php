@@ -116,14 +116,4 @@ class ProfileController extends Controller
         }
         return response()->json($response, $code);
     }
-
-    public function upsertGeneralProfile(Request $request) {
-        $validated = $request->validate([
-            'id' => 'required|max:255|exists:users,id',
-            'username' => 'nullable|max:255',
-            'email' => 'nullable|max:255|email',
-        ]);
-
-        $record = Model::find($validated['id']);
-    }
 }

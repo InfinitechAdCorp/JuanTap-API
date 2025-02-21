@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
 
 use App\Models\User as Model;
@@ -40,7 +39,7 @@ class UserController extends Controller
 
     public function getByEmail(Request $request)
     {
-        $account_id = $request->provider_account_id;
+        $account_id = $request->account_id;
         $record = Model::with($this->relations)->whereHas('provider', function ($result) use ($account_id) {
             $result->where('account_id', $account_id);
         })->first();
@@ -108,7 +107,8 @@ class UserController extends Controller
             $validated = $request->validate([
                 'email' => 'required|max:255|email',
                 'password' => 'required|min:8|max:255',
-                'type' => 'nullable|max:255'
+                'type' => 'nullable|max:255',
+                'name' => 'required|max:255',
             ]);
             $validated['password'] = Hash::make($validated['password']);
         }
