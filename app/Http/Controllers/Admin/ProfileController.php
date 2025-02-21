@@ -18,16 +18,10 @@ class ProfileController extends Controller
     public $rules = [
         'user_id' => 'required|exists:users,id',
         'template_id' => 'required|exists:templates,id',
-        'position' => 'required|max:255',
-        'phone' => 'required|max:255',
-        'facebook' => 'required|max:255',
-        'instagram' => 'required|max:255',
-        'telegram' => 'required|max:255',
-        'viber' => 'required|max:255',
-        'whatsapp' => 'required|max:255',
-        'about' => 'required',
-        'company' => 'required',
-        'image' => 'required',
+        'name' => 'required|max:255',
+        'location' => 'required|max:255',
+        'bio' => 'required',
+        'avatar' => 'required|file',
     ];
 
     public function getAll()
@@ -55,14 +49,9 @@ class ProfileController extends Controller
     {
         $validated = $request->validate($this->rules);
 
-        $key = 'company';
-        if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($request->file($key), "profiles/companies");
-        }
-
         $key = 'avatar';
         if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($request->file($key), "profiles/avatars");
+            $validated[$key] = $this->upload($request->file($key), "avatars");
         }
 
         $record = Model::create($validated);
@@ -77,23 +66,16 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $this->rules['id'] = 'required|exists:profiles,id';
-        $this->rules['company'] = 'nullable';
-        $this->rules['avatar'] = 'nullable';
+        $this->rules['avatar'] = 'nullable|file';
 
         $validated = $request->validate($this->rules);
 
         $record = Model::find($validated['id']);
 
-        $key = 'company';
-        if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete("profiles/companies/$record[$key]");
-            $validated[$key] = $this->upload($request->file($key), "profiles/companies");
-        }
-
         $key = 'avatar';
         if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete("profiles/avatars/$record[$key]");
-            $validated[$key] = $this->upload($request->file($key), "profiles/avatars");
+            Storage::disk('s3')->delete("avatars/$record[$key]");
+            $validated[$key] = $this->upload($request->file($key), "avatars");
         }
 
         $record->update($validated);
@@ -106,8 +88,7 @@ class ProfileController extends Controller
     {
         $record = Model::find($id);
         if ($record) {
-            Storage::disk('s3')->delete("profiles/companies/$record->company");
-            Storage::disk('s3')->delete("profiles/avatars/$record->avatar");
+            Storage::disk('s3')->delete("avatars/$record->avatar");
 
             $record->delete();
             $code = 200;

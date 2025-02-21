@@ -14,15 +14,9 @@ class Profile extends Model
     protected $fillable = [
         'user_id',
         'template_id',
-        'position',
-        'phone',
-        'facebook',
-        'instagram',
-        'telegram',
-        'viber',
-        'whatsapp',
-        'about',
-        'company',
+        'name',
+        'location',
+        'bio',
         'avatar',
     ];
 
