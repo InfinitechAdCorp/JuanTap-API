@@ -85,7 +85,6 @@ class UserController extends Controller
             $code = 200;
             $response = [
                 'message' => "Account Is Already Linked",
-                'record' => $record,
             ];
         }
 
