@@ -45,21 +45,17 @@ class UserController extends Controller
             $result->where('account_id', $account_id);
         })->first();
 
+        if (!$record) {
+            $record = Model::with($this->relations)->where('email', $request->email)->first();
+        }
+
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
-            return response()->json($response, $code);
         } else {
-            $record = Model::with($this->relations)->where('email', $request->email)->first();
-            if ($record) {
-                $code = 200;
-                $response = ['message' => "Fetched $this->model", 'record' => $record];
-                return response()->json($response, $code);
-            }
+            $code = 404;
+            $response = ['message' => "$this->model Not Found"];
         }
-
-        $code = 404;
-        $response = ['message' => "$this->model Not Found"];
         return response()->json($response, $code);
     }
 
@@ -145,34 +141,6 @@ class UserController extends Controller
             'message' => "Created $this->model",
             'record' => $record,
         ];
-        return response()->json($response, $code);
-    }
-
-    public function login(Request $request)
-    {
-        $validated = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:8',
-        ]);
-
-        $record = Model::where('email', $validated['email'])->first();
-        $isValid = Hash::check($validated['password'], $record->password);
-
-        if ($record && $isValid) {
-            $record->tokens()->delete();
-            $token = $record->createToken("$record->email-AuthToken")->plainTextToken;
-            $code = 200;
-            $response = [
-                'message' => 'Logged In Successfully',
-                'token' => $token,
-                'record' => $record,
-            ];
-        } else {
-            $code = 401;
-            $response = [
-                'message' => 'Invalid Credentials',
-            ];
-        }
         return response()->json($response, $code);
     }
 
