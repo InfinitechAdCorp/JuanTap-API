@@ -121,11 +121,7 @@ class UserController extends Controller
 
         $record = Model::updateOrCreate(
             ['email' => $validated['email']],
-            [
-                'email' => $validated['email'],
-                'password' => $validated['password'] ?? null,
-                'type' => $validated['type'] ?? "User",
-            ]
+            $validated
         );
 
         if ($provider) {
