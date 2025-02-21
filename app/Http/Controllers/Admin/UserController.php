@@ -65,20 +65,16 @@ class UserController extends Controller
             'id' => 'required|max:255|exists:users,id',
             'password' => 'nullable|min:8|max:255',
             'type' => 'nullable|max:255',
-            'provider' => 'required|max:255',
-            'provider_account_id' => 'required|max:255',
+            'name' => 'required|max:255',
+            'account_id' => 'required|max:255',
             'access_token' => 'required|max:255',
         ]);
 
         $record = Model::find($validated['id']);
 
         if (!$record->provider) {
-            Provider::create([
-                'user_id' => $record->id,
-                'name' => $validated['provider'],
-                'account_id' => $validated['provider_account_id'],
-                'access_token' => $validated['access_token'],
-            ]);
+            $validated['user_id'] = $record->id;
+            Provider::create($validated);
 
             $code = 200;
             $response = [
@@ -98,15 +94,15 @@ class UserController extends Controller
 
     public function upsert(Request $request)
     {
-        $provider = strtolower($request->provider);
+        $name = strtolower($request->name);
 
-        if ($provider == "google") {
+        if ($name == "google") {
             $validated = $request->validate([
                 'email' => 'required|max:255|email',
                 'password' => 'nullable|min:8|max:255',
                 'type' => 'nullable|max:255',
-                'provider' => 'required|max:255',
-                'provider_account_id' => 'required|max:255',
+                'name' => 'required|max:255',
+                'account_id' => 'required|max:255',
                 'access_token' => 'required|max:255',
             ]);
         } else {
@@ -115,7 +111,6 @@ class UserController extends Controller
                 'password' => 'required|min:8|max:255',
                 'type' => 'nullable|max:255'
             ]);
-
             $validated['password'] = Hash::make($validated['password']);
         }
 
@@ -124,15 +119,11 @@ class UserController extends Controller
             $validated
         );
 
-        if ($provider) {
+        if ($name) {
+            $validated['user_id'] = $record->id;
             Provider::updateOrCreate(
                 ['user_id' => $record->id],
-                [
-                    'user_id' => $record->id,
-                    'name' => $validated['provider'],
-                    'account_id' => $validated['provider_account_id'],
-                    'access_token' => $validated['access_token'],
-                ]
+                $validated,
             );
         }
 
