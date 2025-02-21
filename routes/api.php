@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\SocialController;
 use App\Http\Controllers\Admin\TemplateController;
 use App\Http\Controllers\Admin\SubscriptionController;
 
@@ -39,6 +40,15 @@ Route::middleware('auth.admin')->group(function () {
         Route::put('', [ProfileController::class, 'update']);
         Route::delete('{id}', [ProfileController::class, 'delete']);
     });
+
+    Route::prefix('socials')->group(function () {
+        Route::get('', [SocialController::class, 'getAll']);
+        Route::get('{id}', [SocialController::class, 'get']);
+        Route::post('', [SocialController::class, 'create']);
+        Route::put('', [SocialController::class, 'update']);
+        Route::delete('{id}', [SocialController::class, 'delete']);
+    });
+
 
     Route::prefix('templates')->group(function () {
         Route::get('', [TemplateController::class, 'getAll']);
