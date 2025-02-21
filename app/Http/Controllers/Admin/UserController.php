@@ -70,23 +70,14 @@ class UserController extends Controller
         ]);
 
         $record = Model::find($validated['id']);
+        $validated['user_id'] = $record->id;
+        Provider::updateOrCreate(['user_id' => $validated['user_id']], $validated);
 
-        if (!$record->provider) {
-            $validated['user_id'] = $record->id;
-            Provider::create($validated);
-
-            $code = 200;
-            $response = [
-                'message' => "Account Linked",
-                'record' => $record,
-            ];
-        } else {
-            $code = 200;
-            $response = [
-                'message' => "Account Is Already Linked",
-            ];
-        }
-
+        $code = 200;
+        $response = [
+            'message' => "Account Linked",
+            'record' => $record,
+        ];
         return response()->json($response, $code);
     }
 
