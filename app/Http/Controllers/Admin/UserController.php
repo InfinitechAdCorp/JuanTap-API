@@ -122,19 +122,21 @@ class UserController extends Controller
             [
                 'email' => $validated['email'],
                 'password' => $validated['password'],
-                'type' => $validated['type'],
+                'type' => $validated['type'] ?? "User",
             ]
         );
 
-        Provider::updateOrCreate(
-            ['user_id' => $record->id],
-            [
-                'user_id' => $record->id,
-                'name' => $validated['provider'],
-                'account_id' => $validated['provider_account_id'],
-                'access_token' => $validated['access_token'],
-            ]
-        );
+        if ($request->provider) {
+            Provider::updateOrCreate(
+                ['user_id' => $record->id],
+                [
+                    'user_id' => $record->id,
+                    'name' => $validated['provider'],
+                    'account_id' => $validated['provider_account_id'],
+                    'access_token' => $validated['access_token'],
+                ]
+            );
+        }
 
         $code = $record->wasRecentlyCreated ? 201 : 200;
         $response = [
