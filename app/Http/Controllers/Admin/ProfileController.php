@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Traits\Uploadable;
 
 use App\Models\Profile as Model;
+use App\Models\Provider;
 
 class ProfileController extends Controller
 {
@@ -114,5 +115,15 @@ class ProfileController extends Controller
             $response = ['message' => "$this->model Not Found"];
         }
         return response()->json($response, $code);
+    }
+
+    public function upsertGeneralProfile(Request $request) {
+        $validated = $request->validate([
+            'id' => 'required|max:255|exists:users,id',
+            'username' => 'nullable|max:255',
+            'email' => 'nullable|max:255|email',
+        ]);
+
+        $record = Model::find($validated['id']);
     }
 }

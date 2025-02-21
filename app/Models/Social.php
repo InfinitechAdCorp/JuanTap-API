@@ -7,21 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Profile extends Model
+class Social extends Model
 {
     use HasFactory, HasUlids;
 
     protected $fillable = [
-        'user_id',
-        'template_id',
+        'profile_id',
         'name',
-        'location',
-        'bio',
-        'avatar',
+        'link',
     ];
 
-    public function user(): BelongsTo
+    public function profile(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Profile::class);
     }
 }
