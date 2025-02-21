@@ -47,7 +47,15 @@ class ProfileController extends Controller
 
     public function create(Request $request)
     {
-        $validated = $request->validate($this->rules);
+        $rules = [
+            'user_id' => 'required|exists:users,id',
+            'template_id' => 'required|exists:templates,id',
+            'name' => 'required|max:255',
+            'location' => 'required|max:255',
+            'bio' => 'required',
+            'avatar' => 'required|file',
+        ];
+        $validated = $request->validate($rules);
 
         $key = 'avatar';
         if ($request->hasFile($key)) {
@@ -65,10 +73,16 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        $this->rules['id'] = 'required|exists:profiles,id';
-        $this->rules['avatar'] = 'nullable|file';
-
-        $validated = $request->validate($this->rules);
+        $rules = [
+            'id' => 'required|exists:profiles,id',
+            'user_id' => 'nullable|exists:users,id',
+            'template_id' => 'nullable|exists:templates,id',
+            'name' => 'nullable|max:255',
+            'location' => 'nullable|max:255',
+            'bio' => 'nullable',
+            'avatar' => 'nullable|file',
+        ];
+        $validated = $request->validate($rules);
 
         $record = Model::find($validated['id']);
 
