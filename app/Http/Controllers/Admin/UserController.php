@@ -193,7 +193,7 @@ class UserController extends Controller
     {
         $user_id = $request->header('user-id');
         $validated = $request->validate([
-            'username' => 'nullable|max:255|unique:users,username',
+            'username' => 'nullable|max:255',
             'email' => 'nullable|max:255|email',
         ]);
 
