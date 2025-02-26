@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('templates', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('name');
-            $table->text('content');
+            $table->string('file');
             $table->timestamps();
         });
     }

@@ -13,7 +13,7 @@ class TemplateController extends Controller
 
     public $rules = [
         'name' => 'required|max:255',
-        'content' => 'required',
+        'file' => 'required',
     ];
 
     public function getAll()
