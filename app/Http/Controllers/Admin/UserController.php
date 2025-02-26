@@ -62,6 +62,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'id' => 'required|max:255|exists:users,id',
+            'username' => 'nullable|max:255|unique:users,username',
             'password' => 'nullable|min:8|max:255',
             'type' => 'nullable|max:255',
             'name' => 'required|max:255',
