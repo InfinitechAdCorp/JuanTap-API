@@ -78,7 +78,7 @@ class UserController extends Controller
         $code = 200;
         $response = [
             'message' => "Account Linked",
-            // 'record' => $record,
+            'record' => $record,
         ];
         return response()->json($response, $code);
     }
