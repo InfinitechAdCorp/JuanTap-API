@@ -72,6 +72,7 @@ class UserController extends Controller
 
         $record = Model::find($validated['id']);
         $validated['user_id'] = $record->id;
+        $record->update($validated);
         Provider::updateOrCreate(['user_id' => $validated['user_id']], $validated);
 
         $code = 200;
