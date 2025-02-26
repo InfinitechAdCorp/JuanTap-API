@@ -14,7 +14,6 @@ class SubscriptionController extends Controller
     public $relations = ['user'];
 
     public $rules = [
-        'user_id' => 'required|exists:users,id',
         'plan' => 'required|max:255',
         'bs' => 'required',
     ];
@@ -42,7 +41,10 @@ class SubscriptionController extends Controller
 
     public function create(Request $request)
     {
+        $user_id = $request->header('user-id');
         $validated = $request->validate($this->rules);
+        $validated['user_id'] = $user_id;
+        
         $record = Model::create($validated);
         $code = 201;
         $response = [
