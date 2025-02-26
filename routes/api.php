@@ -32,6 +32,7 @@ Route::middleware('auth.byId')->group(function () {
         Route::get('', [UserController::class, 'getAll']);
         Route::get('{id}', [UserController::class, 'get']);
         Route::post('logout', [UserController::class, 'logout']);
+        Route::put('update/general', [UserController::class, 'updateGeneralSettings']);
     });
 
     Route::prefix('profiles')->group(function () {
