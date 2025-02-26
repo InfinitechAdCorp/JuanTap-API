@@ -81,7 +81,7 @@ class UserController extends Controller
         return response()->json($response, $code);
     }
 
-    public function createByCredentials(Request $request)
+    public function signupByCredentials(Request $request)
     {
         $validated = $request->validate([
             'email' => 'required|max:255|email|unique:users,email',
