@@ -33,6 +33,7 @@ Route::middleware('auth.byId')->group(function () {
         Route::get('{id}', [UserController::class, 'get']);
         Route::post('logout', [UserController::class, 'logout']);
         Route::put('update/general', [UserController::class, 'updateGeneralSettings']);
+        Route::put('update/password', [UserController::class, 'updatePassword']);
     });
 
     Route::prefix('profiles')->group(function () {

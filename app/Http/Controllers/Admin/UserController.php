@@ -200,7 +200,31 @@ class UserController extends Controller
         $record = Model::find($user_id);
         $record->update($validated);
         $code = 200;
-        $response = ['message' => "Updated $this->model", 'record' => $record];
+        $response = ['message' => "Updated General Settings", 'record' => $record];
+        return response()->json($response, $code);
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $user_id = $request->header('user-id');
+        $validated = $request->validate([
+            'old' => 'nullable|min:8|max:255',
+            'new' => 'nullable|min:8|max:255',
+        ]);
+
+        $record = Model::find($user_id);
+        $isValid = Hash::check($validated['old'], $record->password);
+        if ($isValid) {
+            $record->update([
+                'password' => Hash::make($validated['new']),
+            ]);
+            $code = 200;
+            $response = ['message' => "Updated Password", 'record' => $record];
+        } else {
+            $code = 422;
+            $response = ['message' => "Invalid Password"];
+        }
+
         return response()->json($response, $code);
     }
 }
