@@ -21,7 +21,6 @@ class AuthenticateById
         if ($user) {
             return $next($request);
         } 
-        
         return response()->json(['message' => "Invalid User ID"], 401);
     }
 }
