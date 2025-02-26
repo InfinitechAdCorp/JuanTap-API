@@ -26,7 +26,7 @@ Route::prefix('users')->group(function () {
     Route::post('login', [UserController::class, 'login']);
 });
 
-Route::middleware('auth.admin')->group(function () {
+Route::middleware('auth.byId')->group(function () {
     Route::prefix('users')->group(function () {
         Route::get('', [UserController::class, 'getAll']);
         Route::get('{id}', [UserController::class, 'get']);
