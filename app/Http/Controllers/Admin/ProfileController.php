@@ -52,43 +52,43 @@ class ProfileController extends Controller
         ];
         $validated = $request->validate($rules);
 
-        // $record = Model::where('user_id', $user_id)->first();
+        $record = Model::where('user_id', $user_id)->first();
 
-        // if ($record) {
-        //     $key = 'avatar';
-        //     if ($request->hasFile($key)) {
-        //         Storage::disk('s3')->delete("avatars/$record[$key]");
-        //     }
-        //     $record->socials()->delete();
-        // }
+        if ($record) {
+            $key = 'avatar';
+            if ($validated[$key]) {
+                Storage::disk('s3')->delete("avatars/$record[$key]");
+            }
+            $record->socials()->delete();
+        }
 
-        // $key = 'avatar';
-        // $validated[$key] = $this->upload($request->file($key), "avatars");
+        $key = 'avatar';
+        $validated[$key] = $this->upload($request->file($key), "avatars");
 
-        // $record = Model::updateOrCreate(
-        //     ['user_id' => $user_id],
-        //     $validated
-        // );
+        $record = Model::updateOrCreate(
+            ['user_id' => $user_id],
+            $validated
+        );
 
-        // $key = 'socials';
-        // if ($request[$key]) {
-        //     foreach ($request[$key] as $social) {
-        //         Social::create([
-        //             'profile_id' => $record->id,
-        //             'name' => $social->name,
-        //             'link' => $social->link,
-        //         ]);
-        //     }
-        // }
+        $key = 'socials';
+        if ($validated[$key]) {
+            foreach ($validated[$key] as $social) {
+                Social::create([
+                    'profile_id' => $record->id,
+                    'platform' => $social->platform,
+                    'url' => $social->url,
+                ]);
+            }
+        }
 
-        // $code = $record->wasRecentlyCreated ? 201 : 200;
-        // $action = $code == 201 ? "Created" : "Updated";
-        // $record = Model::with($this->relations)->where('id', $record->id)->first();
-        // $response = [
-        //     'message' => "$action $this->model",
-        //     'record' => $record,
-        // ];
-        return response()->json(gettype($validated['socials']), $code = 200);
+        $code = $record->wasRecentlyCreated ? 201 : 200;
+        $action = $code == 201 ? "Created" : "Updated";
+        $record = Model::with($this->relations)->where('id', $record->id)->first();
+        $response = [
+            'message' => "$action $this->model",
+            'record' => $record,
+        ];
+        return response()->json($response, $code = 200);
     }
 
     public function delete($id)
