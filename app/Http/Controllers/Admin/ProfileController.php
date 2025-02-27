@@ -88,7 +88,7 @@ class ProfileController extends Controller
         //     'message' => "$action $this->model",
         //     'record' => $record,
         // ];
-        return response()->json(gettype($request->socials), $code = 200);
+        return response()->json($validated['socials'][0]['platform'], $code = 200);
     }
 
     public function delete($id)
