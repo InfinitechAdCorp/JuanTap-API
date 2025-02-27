@@ -56,7 +56,7 @@ class ProfileController extends Controller
 
         if ($record) {
             $key = 'avatar';
-            if ($validated[$key]) {
+            if ($request->hasFile($key)) {
                 Storage::disk('s3')->delete("avatars/$record[$key]");
             }
             $record->socials()->delete();
