@@ -23,7 +23,7 @@ Route::prefix('users')->group(function () {
     Route::post('by-email', [UserController::class, 'getByEmail']);
     Route::post('link-oauth', [UserController::class, 'linkOAuth']);
     Route::post('signup', [UserController::class, 'signupByCredentials']);
-    Route::post('', [UserController::class, 'upsert']);
+    Route::put('', [UserController::class, 'upsert']);
     Route::post('login', [UserController::class, 'login']);
 });
 
@@ -39,7 +39,7 @@ Route::middleware('auth.byId')->group(function () {
     Route::prefix('profiles')->group(function () {
         Route::get('', [ProfileController::class, 'getAll']);
         Route::get('{id}', [ProfileController::class, 'get']);
-        Route::post('', [ProfileController::class, 'upsert']);
+        Route::put('', [ProfileController::class, 'upsert']);
         Route::delete('{id}', [ProfileController::class, 'delete']);
     });
 
