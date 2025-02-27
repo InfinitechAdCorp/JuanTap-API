@@ -62,13 +62,13 @@ class ProfileController extends Controller
             $record->socials()->delete();
         }
 
+        $key = 'avatar';
+        $validated[$key] = $this->upload($request->file($key), "avatars");
+
         $record = Model::updateOrCreate(
             ['user_id' => $user_id],
             $validated
         );
-
-        $key = 'avatar';
-        $validated[$key] = $this->upload($request->file($key), "avatars");
 
         $key = 'socials';
         if ($request[$key]) {
