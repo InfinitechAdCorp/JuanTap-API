@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Traits\Uploadable;
 
 use App\Models\Profile as Model;
-use App\Models\Provider;
+use App\Models\Social;
 
 class ProfileController extends Controller
 {
@@ -39,34 +39,7 @@ class ProfileController extends Controller
         return response()->json($response, $code);
     }
 
-    public function create(Request $request)
-    {
-        $user_id = $request->header('user-id');
-        $rules = [
-            'template_id' => 'required|exists:templates,id',
-            'name' => 'required|max:255',
-            'location' => 'required|max:255',
-            'bio' => 'required',
-            'avatar' => 'required|file',
-        ];
-        $validated = $request->validate($rules);
-        $validated['user_id'] = $user_id;
-
-        $key = 'avatar';
-        if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($request->file($key), "avatars");
-        }
-
-        $record = Model::create($validated);
-        $code = 201;
-        $response = [
-            'message' => "Created $this->model",
-            'record' => $record,
-        ];
-        return response()->json($response, $code);
-    }
-
-    public function update(Request $request)
+    public function upsert(Request $request)
     {
         $user_id = $request->header('user-id');
         $rules = [
@@ -75,21 +48,44 @@ class ProfileController extends Controller
             'location' => 'nullable|max:255',
             'bio' => 'nullable',
             'avatar' => 'nullable|file',
+            'socials' => 'nullable|array',
         ];
         $validated = $request->validate($rules);
-        $validated['user_id'] = $user_id;
 
         $record = Model::where('user_id', $validated['user_id'])->first();
 
-        $key = 'avatar';
-        if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete("avatars/$record[$key]");
-            $validated[$key] = $this->upload($request->file($key), "avatars");
+        if ($record) {
+            $key = 'avatar';
+            if ($request->hasFile($key)) {
+                Storage::disk('s3')->delete("avatars/$record[$key]");
+                $validated[$key] = $this->upload($request->file($key), "avatars");
+            }
+
+            $record->socials()->delete();
         }
 
-        $record->update($validated);
-        $code = 200;
-        $response = ['message' => "Updated $this->model", 'record' => $record];
+        $record->updateOrCreate(
+            ['user_id' => $user_id],
+            $validated
+        );
+
+        $key = 'socials';
+        if ($request[$key]) {
+            foreach ($request[$key] as $social) {
+                Social::create([
+                    'profile_id' => $record->id,
+                    'name' => $social->name,
+                    'link' => $social->link,
+                ]);
+            }
+        }
+
+        $code = $record->wasRecentlyCreated ? 201 : 200;
+        $action = $code == 201 ? "Created" : "Updated";
+        $response = [
+            'message' => "$action $this->model",
+            'record' => $record,
+        ];
         return response()->json($response, $code);
     }
 

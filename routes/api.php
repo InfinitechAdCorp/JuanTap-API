@@ -39,8 +39,7 @@ Route::middleware('auth.byId')->group(function () {
     Route::prefix('profiles')->group(function () {
         Route::get('', [ProfileController::class, 'getAll']);
         Route::get('{id}', [ProfileController::class, 'get']);
-        Route::post('', [ProfileController::class, 'create']);
-        Route::put('', [ProfileController::class, 'update']);
+        Route::post('', [ProfileController::class, 'upsert']);
         Route::delete('{id}', [ProfileController::class, 'delete']);
     });
 
