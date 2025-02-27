@@ -9,7 +9,7 @@ use App\Models\Template as Model;
 
 class TemplateController extends Controller
 {
-    public $model = "Profile";
+    public $model = "Templates";
 
     public $rules = [
         'name' => 'required|max:255',
