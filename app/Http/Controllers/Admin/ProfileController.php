@@ -70,16 +70,16 @@ class ProfileController extends Controller
             $validated
         );
 
-        $key = 'socials';
-        if ($validated[$key]) {
-            foreach ($validated[$key] as $social) {
-                Social::create([
-                    'profile_id' => $record->id,
-                    'platform' => $social['platform'],
-                    'url' => $social['url'],
-                ]);
-            }
-        }
+        // $key = 'socials';
+        // if ($validated[$key]) {
+        //     foreach ($validated[$key] as $social) {
+        //         Social::create([
+        //             'profile_id' => $record->id,
+        //             'platform' => $social['platform'],
+        //             'url' => $social['url'],
+        //         ]);
+        //     }
+        // }
 
         $code = $record->wasRecentlyCreated ? 201 : 200;
         $action = $code == 201 ? "Created" : "Updated";
@@ -88,7 +88,7 @@ class ProfileController extends Controller
             'message' => "$action $this->model",
             'record' => $record,
         ];
-        return response()->json($response, $code = 200);
+        return response()->json($validated['socials'], $code = 200);
     }
 
     public function delete($id)
