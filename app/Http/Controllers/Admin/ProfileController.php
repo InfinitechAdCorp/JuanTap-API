@@ -64,7 +64,7 @@ class ProfileController extends Controller
             $record->socials()->delete();
         }
 
-        $record->updateOrCreate(
+        $record = Model::updateOrCreate(
             ['user_id' => $user_id],
             $validated
         );
