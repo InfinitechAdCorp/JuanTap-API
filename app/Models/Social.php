@@ -13,8 +13,8 @@ class Social extends Model
 
     protected $fillable = [
         'profile_id',
-        'name',
-        'link',
+        'platform',
+        'url',
     ];
 
     public function profile(): BelongsTo

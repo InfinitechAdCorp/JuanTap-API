@@ -39,8 +39,8 @@ class SocialController extends Controller
     {
         $rules = [
             'profile_id' => 'required|exists:profiles,id',
-            'name' => 'required|max:255',
-            'link' => 'required|max:255',
+            'platform' => 'required|max:255',
+            'url' => 'required|max:255',
         ];
         $validated = $request->validate($rules);
 
@@ -58,8 +58,8 @@ class SocialController extends Controller
         $rules = [
             'id' => 'required|exists:socials,id',
             'profile_id' => 'nullable|exists:profiles,id',
-            'name' => 'nullable|max:255',
-            'link' => 'nullable|max:255',
+            'platform' => 'nullable|max:255',
+            'url' => 'nullable|max:255',
         ];
         $validated = $request->validate($rules);
 
