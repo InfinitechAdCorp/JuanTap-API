@@ -75,8 +75,8 @@ class ProfileController extends Controller
             foreach ($validated[$key] as $social) {
                 Social::create([
                     'profile_id' => $record->id,
-                    'platform' => $social->platform,
-                    'url' => $social->url,
+                    'platform' => $social['platform'],
+                    'url' => $social['url'],
                 ]);
             }
         }
