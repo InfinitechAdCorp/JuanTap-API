@@ -52,7 +52,7 @@ class ProfileController extends Controller
         ];
         $validated = $request->validate($rules);
 
-        $record = Model::where('user_id', $validated['user_id'])->first();
+        $record = Model::where('user_id', $user_id)->first();
 
         if ($record) {
             $key = 'avatar';
