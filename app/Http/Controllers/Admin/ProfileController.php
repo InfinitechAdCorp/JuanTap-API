@@ -48,7 +48,7 @@ class ProfileController extends Controller
             'location' => 'nullable|max:255',
             'bio' => 'nullable',
             'avatar' => 'nullable',
-            'socials' => 'nullable|array',
+            'socials' => 'nullable',
         ];
         $validated = $request->validate($rules);
 
