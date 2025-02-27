@@ -47,7 +47,7 @@ class ProfileController extends Controller
             'name' => 'nullable|max:255',
             'location' => 'nullable|max:255',
             'bio' => 'nullable',
-            'avatar' => 'nullable|file',
+            'avatar' => 'nullable',
             'socials' => 'nullable|array',
         ];
         $validated = $request->validate($rules);
@@ -56,7 +56,7 @@ class ProfileController extends Controller
 
         if ($record) {
             $key = 'avatar';
-            if ($request->hasFile($key) && $record[$key]) {
+            if ($request->hasFile($key)) {
                 Storage::disk('s3')->delete("avatars/$record[$key]");
             }
             $record->socials()->delete();
@@ -83,6 +83,7 @@ class ProfileController extends Controller
 
         $code = $record->wasRecentlyCreated ? 201 : 200;
         $action = $code == 201 ? "Created" : "Updated";
+        $record = Model::with($this->relations)->where('id', $record->id)->first();
         $response = [
             'message' => "$action $this->model",
             'record' => $record,
