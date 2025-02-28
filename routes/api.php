@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocialController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\TicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,5 +68,14 @@ Route::middleware('auth.byId')->group(function () {
         Route::put('', [SubscriptionController::class, 'update']);
         Route::delete('{id}', [SubscriptionController::class, 'delete']);
         Route::post('set-status', [SubscriptionController::class, 'delete']);
+    });
+
+    Route::prefix('tickets')->group(function () {
+        Route::get('', [TicketController::class, 'getAll']);
+        Route::get('{id}', [TicketController::class, 'get']);
+        Route::post('', [TicketController::class, 'create']);
+        Route::put('', [TicketController::class, 'update']);
+        Route::delete('{id}', [TicketController::class, 'delete']);
+        Route::post('set-status', [TicketController::class, 'delete']);
     });
 });
