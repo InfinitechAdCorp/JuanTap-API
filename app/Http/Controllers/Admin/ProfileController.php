@@ -16,7 +16,7 @@ class ProfileController extends Controller
 
     public $model = "Profile";
 
-    public $relations = ["user", "socials"];
+    public $relations = ["user", "template", "socials"];
 
     public function getAll()
     {
