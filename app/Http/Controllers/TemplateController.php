@@ -1,22 +1,31 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Traits\Uploadable;
 
-use App\Models\Social as Model;
-use App\Models\Profile;
+use App\Models\Template as Model;
 
-class SocialController extends Controller
+class TemplateController extends Controller
 {
-    public $model = "Social";
+    use Uploadable;
 
-    public $relations = ["profile"];
+    public $model = "Templates";
+
+    public $rules = [
+        'name' => 'required|max:255',
+        'file' => 'required',
+        'thumbnail' => 'required',
+    ];
+
+    public $directory = "templates";
 
     public function getAll()
     {
-        $records = Model::with($this->relations)->get();
+        $records = Model::all();
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         $code = 200;
         return response()->json($response, $code);
@@ -24,7 +33,7 @@ class SocialController extends Controller
 
     public function get($id)
     {
-        $record = Model::with($this->relations)->where('id', $id)->first();
+        $record = Model::where('id', $id)->first();
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
@@ -37,12 +46,12 @@ class SocialController extends Controller
 
     public function create(Request $request)
     {
-        $rules = [
-            'profile_id' => 'required|exists:profiles,id',
-            'platform' => 'required|max:255',
-            'url' => 'required|max:255',
-        ];
-        $validated = $request->validate($rules);
+        $validated = $request->validate($this->rules);
+
+        $key = 'thumbnail';
+        if ($request->hasFile($key)) {
+            $validated[$key] = $this->upload($request->file($key), $this->directory);
+        }
 
         $record = Model::create($validated);
         $code = 201;
@@ -55,15 +64,18 @@ class SocialController extends Controller
 
     public function update(Request $request)
     {
-        $rules = [
-            'id' => 'required|exists:socials,id',
-            'profile_id' => 'nullable|exists:profiles,id',
-            'platform' => 'nullable|max:255',
-            'url' => 'nullable|max:255',
-        ];
-        $validated = $request->validate($rules);
+        $this->rules['id'] = 'required|exists:templates,id';
+        $this->rules['thumbnail'] = 'nullable';
+        $validated = $request->validate($this->rules);
 
         $record = Model::find($validated['id']);
+
+        $key = 'thumbnail';
+        if ($request->hasFile($key)) {
+            Storage::disk('s3')->delete($this->directory."/$record[$key]");
+            $validated[$key] = $this->upload($request->file($key), $this->directory);
+        }
+
         $record->update($validated);
         $code = 200;
         $response = ['message' => "Updated $this->model", 'record' => $record];

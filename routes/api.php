@@ -2,11 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\SocialController;
-use App\Http\Controllers\Admin\TemplateController;
-use App\Http\Controllers\Admin\SubscriptionController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SocialController;
+use App\Http\Controllers\TemplateController;
+use App\Http\Controllers\SubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
