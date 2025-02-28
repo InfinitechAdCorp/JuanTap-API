@@ -18,7 +18,7 @@ class TemplateController extends Controller
     public $rules = [
         'name' => 'required|max:255',
         'file' => 'required',
-        'image' => 'required',
+        'thumbnail' => 'required',
     ];
 
     public $directory = "templates";
@@ -48,7 +48,7 @@ class TemplateController extends Controller
     {
         $validated = $request->validate($this->rules);
 
-        $key = 'image';
+        $key = 'thumbnail';
         if ($request->hasFile($key)) {
             $validated[$key] = $this->upload($request->file($key), $this->directory);
         }
@@ -65,12 +65,12 @@ class TemplateController extends Controller
     public function update(Request $request)
     {
         $this->rules['id'] = 'required|exists:templates,id';
-        $this->rules['image'] = 'nullable';
+        $this->rules['thumbnail'] = 'nullable';
         $validated = $request->validate($this->rules);
 
         $record = Model::find($validated['id']);
 
-        $key = 'image';
+        $key = 'thumbnail';
         if ($request->hasFile($key)) {
             Storage::disk('s3')->delete($this->directory."/$record[$key]");
             $validated[$key] = $this->upload($request->file($key), $this->directory);

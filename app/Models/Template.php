@@ -14,13 +14,13 @@ class Template extends Model
     protected $fillable = [
         'name',
         'file',
-        'image',
+        'thumbnail',
     ];
 
     public static function booted()
     {
         self::deleted(function (Template $record): void {
-            Storage::disk('s3')->delete("templates/$record->image");
+            Storage::disk('s3')->delete("templates/$record->thumbnail");
         });
     }
 }
