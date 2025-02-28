@@ -72,6 +72,7 @@ class TicketController extends Controller
     {
         $user_id = $request->header('user-id');
         $this->rules['id'] = 'required|exists:tickets,id';
+        $this->rules['image'] = 'nullable';
         $validated = $request->validate($this->rules);
         $validated['user_id'] = $user_id;
 
