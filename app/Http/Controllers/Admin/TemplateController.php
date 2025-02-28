@@ -4,17 +4,24 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Traits\Uploadable;
 
 use App\Models\Template as Model;
 
 class TemplateController extends Controller
 {
+    use Uploadable;
+
     public $model = "Templates";
 
     public $rules = [
         'name' => 'required|max:255',
         'file' => 'required',
+        'thumbnail' => 'required',
     ];
+
+    public $directory = "templates";
 
     public function getAll()
     {
@@ -40,6 +47,12 @@ class TemplateController extends Controller
     public function create(Request $request)
     {
         $validated = $request->validate($this->rules);
+
+        $key = 'image';
+        if ($request->hasFile($key)) {
+            $validated[$key] = $this->upload($request->file($key), $this->directory);
+        }
+
         $record = Model::create($validated);
         $code = 201;
         $response = [
@@ -52,9 +65,17 @@ class TemplateController extends Controller
     public function update(Request $request)
     {
         $this->rules['id'] = 'required|exists:templates,id';
+        $this->rules['image'] = 'nullable';
         $validated = $request->validate($this->rules);
 
         $record = Model::find($validated['id']);
+
+        $key = 'image';
+        if ($request->hasFile($key)) {
+            Storage::disk('s3')->delete($this->directory."/$record[$key]");
+            $validated[$key] = $this->upload($request->file($key), $this->directory);
+        }
+
         $record->update($validated);
         $code = 200;
         $response = ['message' => "Updated $this->model", 'record' => $record];

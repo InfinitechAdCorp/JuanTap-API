@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Support\Facades\Storage;
 
 class Template extends Model
 {
@@ -13,5 +14,13 @@ class Template extends Model
     protected $fillable = [
         'name',
         'file',
+        'image',
     ];
+
+    public static function booted()
+    {
+        self::deleted(function (Template $record): void {
+            Storage::disk('s3')->delete("templates/$record->image");
+        });
+    }
 }
