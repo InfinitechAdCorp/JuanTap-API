@@ -79,3 +79,10 @@ Route::middleware('auth.byId')->group(function () {
         Route::post('set-status', [TicketController::class, 'delete']);
     });
 });
+
+Route::prefix('guest')->group(function () {
+    Route::prefix('templates')->group(function () {
+        Route::get('', [TemplateController::class, 'getAll']);
+        Route::get('{id}', [TemplateController::class, 'get']);
+    });
+});
