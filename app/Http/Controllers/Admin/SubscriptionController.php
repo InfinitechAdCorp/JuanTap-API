@@ -16,6 +16,7 @@ class SubscriptionController extends Controller
     public $rules = [
         'plan' => 'required|max:255',
         'bs' => 'required',
+        'status' => 'required|max:255',
     ];
 
     public function getAll()
@@ -79,6 +80,20 @@ class SubscriptionController extends Controller
             $code = 404;
             $response = ['message' => "$this->model Not Found"];
         }
+        return response()->json($response, $code);
+    }
+
+    public function setStatus(Request $request) {
+        $rules = [
+            'id' => 'required|exists:subscriptions,id',
+            'status' => 'required|max:255',
+        ];
+        $validated = $request->validate($rules);
+
+        $record = Model::find($validated['id']);
+        $record->update($validated);
+        $code = 200;
+        $response = ['message' => "Updated $this->model", 'record' => $record];
         return response()->json($response, $code);
     }
 }

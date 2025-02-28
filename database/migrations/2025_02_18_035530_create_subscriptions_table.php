@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignUlid('user_id');
             $table->string('plan');
             $table->text('bs');
+            $table->string('status');
             $table->timestamps();
         });
     }

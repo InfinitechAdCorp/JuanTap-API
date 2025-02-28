@@ -66,5 +66,6 @@ Route::middleware('auth.byId')->group(function () {
         Route::post('', [SubscriptionController::class, 'create']);
         Route::put('', [SubscriptionController::class, 'update']);
         Route::delete('{id}', [SubscriptionController::class, 'delete']);
+        Route::post('set-status', [SubscriptionController::class, 'delete']);
     });
 });

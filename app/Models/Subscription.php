@@ -15,6 +15,7 @@ class Subscription extends Model
         'user_id',
         'plan',
         'bs',
+        'status',
     ];
 
     public function user(): BelongsTo
