@@ -80,9 +80,10 @@ class ProfileController extends Controller
         }
 
         $code = $record->wasRecentlyCreated ? 201 : 200;
+        $action = $code == 201 ? "Created" : "Updated";
         $record = Model::with($this->relations)->where('id', $record->id)->first();
         $response = [
-            'message' => $code == 201 ? "Created" : "Updated" . " $this->model",
+            'message' => "$action $this->model",
             'record' => $record,
         ];
         return response()->json($response, $code);
@@ -186,8 +187,6 @@ class ProfileController extends Controller
     {
         $record = Model::find($id);
         if ($record) {
-            Storage::disk('s3')->delete("avatars/$record->avatar");
-
             $record->delete();
             $code = 200;
             $response = [

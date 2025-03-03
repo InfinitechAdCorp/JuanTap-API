@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Support\Facades\Storage;
 
 class Profile extends Model
 {
     use HasFactory, HasUlids;
+
+    public $directory = "avatars";
 
     protected $fillable = [
         'user_id',
@@ -17,6 +20,17 @@ class Profile extends Model
         'bio',
         'avatar',
     ];
+
+    public static function booted()
+    {
+        self::updated(function (Profile $record): void {
+            Storage::disk('s3')->delete("$this->directory/$record->avatar");
+        });
+
+        self::deleted(function (Profile $record): void {
+            Storage::disk('s3')->delete("$this->directory/$record->avatar");
+        });
+    }
 
     public function user()
     {
