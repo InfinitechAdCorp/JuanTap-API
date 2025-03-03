@@ -39,35 +39,25 @@ class ProfileController extends Controller
         return response()->json($response, $code);
     }
 
-    public function upsert(Request $request)
+    public function create(Request $request)
     {
         $user_id = $request->header('user-id');
+
         $rules = [
-            'name' => 'nullable|max:255',
-            'location' => 'nullable|max:255',
-            'bio' => 'nullable',
-            'avatar' => 'nullable',
-            'socials' => 'nullable',
+            'name' => 'required|max:255',
+            'location' => 'required|max:255',
+            'bio' => 'required',
+            'avatar' => 'required',
+            'socials' => 'required',
         ];
         $validated = $request->validate($rules);
 
-        $record = Model::where('user_id', $user_id)->first();
-
-        if ($record) {
-            $key = 'avatar';
-            if ($request->hasFile($key)) {
-                Storage::disk('s3')->delete("avatars/$record[$key]");
-            }
-            $record->socials()->delete();
-        }
+        $validated['user_id'] = $user_id;
 
         $key = 'avatar';
         $validated[$key] = $this->upload($request->file($key), "avatars");
 
-        $record = Model::updateOrCreate(
-            ['user_id' => $user_id],
-            $validated
-        );
+        $record = Model::create($validated);
 
         $key = 'socials';
         if ($validated[$key]) {
@@ -80,14 +70,68 @@ class ProfileController extends Controller
             }
         }
 
-        $code = $record->wasRecentlyCreated ? 201 : 200;
-        $action = $code == 201 ? "Created" : "Updated";
         $record = Model::with($this->relations)->where('id', $record->id)->first();
+        $code = 201;
         $response = [
-            'message' => "$action $this->model",
+            'message' => "Created $this->model",
             'record' => $record,
         ];
-        return response()->json($response, $code = 200);
+        return response()->json($response, $code);
+    }
+
+    public function update(Request $request)
+    {
+        $user_id = $request->header('user-id');
+
+        $rules = [
+            'name' => 'nullable|max:255',
+            'location' => 'nullable|max:255',
+            'bio' => 'nullable',
+            'avatar' => 'nullable',
+            'socials' => 'nullable',
+        ];
+        $validated = $request->validate($rules);
+
+        $record = Model::where('user_id', $user_id)->first();
+
+        $validated['user_id'] = $user_id;
+
+        $key = 'avatar';
+        if ($request->hasFile($key)) {
+            Storage::disk('s3')->delete("avatars/$record[$key]");
+            $validated[$key] = $this->upload($request->file($key), "avatars");
+        }
+
+        $record->update($validated);
+
+        $record->socials()->delete();
+
+        $key = 'socials';
+        if ($validated[$key]) {
+            foreach ($validated[$key] as $social) {
+                Social::create([
+                    'profile_id' => $record->id,
+                    'platform' => $social['platform'],
+                    'url' => $social['url'],
+                ]);
+            }
+        }
+
+        $record = Model::with($this->relations)->where('id', $record->id)->first();
+        $code = 200;
+        $response = ['message' => "Updated $this->model", 'record' => $record];
+        return response()->json($response, $code);
+    }
+
+    public function upsert(Request $request)
+    {
+        $user_id = $request->header('user-id');
+        $record = Model::where('user_id', $user_id)->first();
+        if ($record) {
+            $this->update($request);
+        } else {
+            $this->create($request);
+        }
     }
 
     public function delete($id)
