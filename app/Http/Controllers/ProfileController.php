@@ -55,11 +55,6 @@ class ProfileController extends Controller
         $record = Model::where('user_id', $user_id)->first();
 
         $key = 'avatar';
-        if ($record) {
-            if ($request->hasFile($key)) {
-                Storage::disk('s3')->delete("avatars/$record[$key]");
-            }
-        }
         $validated[$key] = $this->upload($request->file($key), "avatars");
 
         $record = Model::updateOrCreate(
