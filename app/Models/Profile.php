@@ -11,8 +11,6 @@ class Profile extends Model
 {
     use HasFactory, HasUlids;
 
-    public $directory = "avatars";
-
     protected $fillable = [
         'user_id',
         'name',
@@ -24,11 +22,11 @@ class Profile extends Model
     public static function booted()
     {
         self::updated(function (Profile $record): void {
-            Storage::disk('s3')->delete("$this->directory/$record->avatar");
+            Storage::disk('s3')->delete("avatars/$record->avatar");
         });
 
         self::deleted(function (Profile $record): void {
-            Storage::disk('s3')->delete("$this->directory/$record->avatar");
+            Storage::disk('s3')->delete("avatars/$record->avatar");
         });
     }
 
