@@ -19,6 +19,8 @@ class TemplateController extends Controller
         'name' => 'required|max:255',
         'description' => 'required',
         'file' => 'required',
+        'type' => 'required|max:255',
+        'price' => 'required|decimal:0,2',
         'thumbnail' => 'required',
     ];
 

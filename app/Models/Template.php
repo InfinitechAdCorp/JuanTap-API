@@ -15,6 +15,8 @@ class Template extends Model
         'name',
         'description',
         'file',
+        'type',
+        'price',
         'thumbnail',
     ];
 

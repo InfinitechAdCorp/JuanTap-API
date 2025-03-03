@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->text('file');
+            $table->string('type');
+            $table->decimal('price', 15, 2);
             $table->string('thumbnail');
             $table->timestamps();
         });
