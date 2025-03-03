@@ -7,7 +7,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -20,12 +19,12 @@ class User extends Authenticatable
         'type',
     ];
 
-    public function provider(): HasOne
+    public function provider()
     {
         return $this->hasOne(Provider::class);
     }
 
-    public function profile(): HasOne
+    public function profile()
     {
         return $this->hasOne(Profile::class);
     }
