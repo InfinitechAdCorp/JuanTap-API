@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('profiles', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id');
-            $table->foreignUlid('template_id')->nullable();
             $table->string('name')->nullable();
             $table->string('location')->nullable();
             $table->text('bio')->nullable();

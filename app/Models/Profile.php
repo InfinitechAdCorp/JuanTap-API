@@ -15,7 +15,6 @@ class Profile extends Model
 
     protected $fillable = [
         'user_id',
-        'template_id',
         'name',
         'location',
         'bio',
@@ -25,11 +24,6 @@ class Profile extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function template(): HasOne
-    {
-        return $this->hasOne(Template::class);
     }
 
     public function socials(): HasMany

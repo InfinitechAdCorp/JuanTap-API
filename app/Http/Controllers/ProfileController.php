@@ -16,7 +16,7 @@ class ProfileController extends Controller
 
     public $model = "Profile";
 
-    public $relations = ["user", "template", "socials"];
+    public $relations = ["user", "socials"];
 
     public function getAll()
     {
@@ -43,7 +43,6 @@ class ProfileController extends Controller
     {
         $user_id = $request->header('user-id');
         $rules = [
-            'template_id' => 'nullable|exists:templates,id',
             'name' => 'nullable|max:255',
             'location' => 'nullable|max:255',
             'bio' => 'nullable',
