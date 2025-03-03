@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('templates', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('name');
+            $table->decimal('price', 15, 2);
             $table->text('description');
             $table->text('file');
-            $table->string('type');
-            $table->decimal('price', 15, 2);
             $table->string('thumbnail');
             $table->timestamps();
         });

@@ -17,10 +17,9 @@ class TemplateController extends Controller
 
     public $rules = [
         'name' => 'required|max:255',
+        'price' => 'required|decimal:0,2',
         'description' => 'required',
         'file' => 'required',
-        'type' => 'required|max:255',
-        'price' => 'required|decimal:0,2',
         'thumbnail' => 'required',
     ];
 
