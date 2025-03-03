@@ -25,4 +25,9 @@ class Template extends Model
             Storage::disk('s3')->delete("templates/$record->thumbnail");
         });
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }
