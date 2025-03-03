@@ -71,12 +71,7 @@ class ProfileController extends Controller
         }
 
         $record = Model::with($this->relations)->where('id', $record->id)->first();
-        $code = 201;
-        $response = [
-            'message' => "Created $this->model",
-            'record' => $record,
-        ];
-        return response()->json($response, $code);
+        return $record;
     }
 
     public function update(Request $request)
@@ -118,9 +113,7 @@ class ProfileController extends Controller
         }
 
         $record = Model::with($this->relations)->where('id', $record->id)->first();
-        $code = 200;
-        $response = ['message' => "Updated $this->model", 'record' => $record];
-        return response()->json($response, $code);
+        return $record;
     }
 
     public function upsert(Request $request)
@@ -128,10 +121,16 @@ class ProfileController extends Controller
         $user_id = $request->header('user-id');
         $record = Model::where('user_id', $user_id)->first();
         if ($record) {
-            $this->update($request);
+            $record = $this->update($request);
+            $code = 200;
+            $response = ['message' => "Updated $this->model", 'record' => $record];
         } else {
-            $this->create($request);
+            $record = $this->create($request);
+            $code = 201;
+            $response = ['message' => "Created $this->model", 'record' => $record];
         }
+
+        return response()->json($response, $code);
     }
 
     public function delete($id)
