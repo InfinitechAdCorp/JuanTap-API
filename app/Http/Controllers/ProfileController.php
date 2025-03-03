@@ -39,6 +39,55 @@ class ProfileController extends Controller
         return response()->json($response, $code);
     }
 
+    public function upsert(Request $request)
+    {
+        $user_id = $request->header('user-id');
+
+        $rules = [
+            'name' => 'nullable|max:255',
+            'location' => 'nullable|max:255',
+            'bio' => 'nullable',
+            'avatar' => 'nullable',
+            'socials' => 'nullable',
+        ];
+        $validated = $request->validate($rules);
+
+        $record = Model::where('user_id', $user_id)->first();
+
+        $key = 'avatar';
+        if ($record) {
+            if ($request->hasFile($key)) {
+                Storage::disk('s3')->delete("avatars/$record[$key]");
+            }
+        }
+        $validated[$key] = $this->upload($request->file($key), "avatars");
+
+        $record = Model::updateOrCreate(
+            ['user_id' => $user_id],
+            $validated
+        );
+
+        $key = 'socials';
+        $record->socials()->delete();
+        if ($validated[$key]) {
+            foreach ($validated[$key] as $social) {
+                Social::create([
+                    'profile_id' => $record->id,
+                    'platform' => $social['platform'],
+                    'url' => $social['url'],
+                ]);
+            }
+        }
+
+        $code = $record->wasRecentlyCreated ? 201 : 200;
+        $record = Model::with($this->relations)->where('id', $record->id)->first();
+        $response = [
+            'message' => $code == 201 ? "Created" : "Updated" . " $this->model",
+            'record' => $record,
+        ];
+        return response()->json($response, $code);
+    }
+
     public function create(Request $request)
     {
         $user_id = $request->header('user-id');
@@ -116,7 +165,7 @@ class ProfileController extends Controller
         return $record;
     }
 
-    public function upsert(Request $request)
+    public function test(Request $request)
     {
         $user_id = $request->header('user-id');
         $record = Model::where('user_id', $user_id)->first();
