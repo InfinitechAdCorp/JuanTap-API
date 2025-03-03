@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 use App\Traits\Uploadable;
 
 use App\Models\Template as Model;
+use App\Models\User;
+use App\Models\UserTemplate;
 
 class TemplateController extends Controller
 {
@@ -74,7 +76,7 @@ class TemplateController extends Controller
 
         $key = 'thumbnail';
         if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete($this->directory."/$record[$key]");
+            Storage::disk('s3')->delete($this->directory . "/$record[$key]");
             $validated[$key] = $this->upload($request->file($key), $this->directory);
         }
 
@@ -97,6 +99,27 @@ class TemplateController extends Controller
             $code = 404;
             $response = ['message' => "$this->model Not Found"];
         }
+        return response()->json($response, $code);
+    }
+
+    public function addToCollection(Request $request)
+    {
+        $user_id = $request->header('user-id');
+
+        $rules = [
+            'template_id' => 'required|exists:templates,id',
+        ];
+
+        $validated = $request->validate($rules);
+        $validated['user_id'] = $user_id;
+
+        Model::create($validated);
+        $record = User::with('templates')->where('id', $user_id)->first();
+        $code = 201;
+        $response = [
+            'message' => "Created $this->model",
+            'record' => $record,
+        ];
         return response()->json($response, $code);
     }
 }
