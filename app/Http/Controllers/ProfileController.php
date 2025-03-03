@@ -44,11 +44,11 @@ class ProfileController extends Controller
         $user_id = $request->header('user-id');
 
         $rules = [
-            'name' => 'required|max:255',
-            'location' => 'required|max:255',
-            'bio' => 'required',
-            'avatar' => 'required',
-            'socials' => 'required',
+            'name' => 'nullable|max:255',
+            'location' => 'nullable|max:255',
+            'bio' => 'nullable',
+            'avatar' => 'nullable',
+            'socials' => 'nullable',
         ];
         $validated = $request->validate($rules);
 
