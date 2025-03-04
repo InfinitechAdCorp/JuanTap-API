@@ -122,7 +122,7 @@ class TemplateController extends Controller
         } else {
             TemplateUser::where('user_id', $data['user_id'])->update(['published' => 0]);
 
-            TemplateUser::updateOrcreate(['template_id' => $data['templated_id']], $data);
+            TemplateUser::updateOrcreate(['template_id' => $data['template_id']], $data);
             $record = User::with('templates')->where('id', $data['user_id'])->first();
             $code = 200;
             $response = [
