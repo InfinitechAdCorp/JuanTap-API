@@ -110,9 +110,9 @@ class TemplateController extends Controller
         $data['template_id'] = $id;
         $data['published'] = 1;
 
-        Model::where('user_id', $user_id)->update(['published', 0]);
+        UserTemplate::where('user_id', $user_id)->update(['published', 0]);
 
-        Model::create($data);
+        UserTemplate::create($data);
         $record = User::with('templates')->where('id', $user_id)->first();
         $code = 201;
         $response = [
