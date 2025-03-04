@@ -111,22 +111,20 @@ class TemplateController extends Controller
         $where = [
             ['user_id', $data['user_id']],
             ['template_id', $data['template_id']],
-            ['published', 1],
         ];
         $record = TemplateUser::where($where)->first();
 
-        if ($record) {
+        if ($record && $record->published == 1) {
             $code = 422;
             $response = [
                 'message' => "$this->model Is Already Published",
             ];
-        }
-        else {
+        } else {
             TemplateUser::where('user_id', $data['user_id'])->update(['published' => 0]);
 
-            TemplateUser::create($data);
+            TemplateUser::updateOrcreate(['template_id' => $data['templated_id']], $data);
             $record = User::with('templates')->where('id', $data['user_id'])->first();
-            $code = 201;
+            $code = 200;
             $response = [
                 'message' => "Published $this->model",
                 'record' => $record,
