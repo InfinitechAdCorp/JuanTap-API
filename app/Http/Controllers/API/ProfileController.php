@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -159,23 +159,6 @@ class ProfileController extends Controller
 
         $record = Model::with($this->relations)->where('id', $record->id)->first();
         return $record;
-    }
-
-    public function test(Request $request)
-    {
-        $user_id = $request->header('user-id');
-        $record = Model::where('user_id', $user_id)->first();
-        if ($record) {
-            $record = $this->update($request);
-            $code = 200;
-            $response = ['message' => "Updated $this->model", 'record' => $record];
-        } else {
-            $record = $this->create($request);
-            $code = 201;
-            $response = ['message' => "Created $this->model", 'record' => $record];
-        }
-
-        return response()->json($response, $code);
     }
 
     public function delete($id)

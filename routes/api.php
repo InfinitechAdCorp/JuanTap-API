@@ -3,11 +3,11 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SocialController;
-use App\Http\Controllers\TemplateController;
-use App\Http\Controllers\SubscriptionController;
-use App\Http\Controllers\TicketController;
+use App\Http\Controllers\API\ProfileController;
+use App\Http\Controllers\API\SocialController;
+use App\Http\Controllers\API\TemplateController;
+use App\Http\Controllers\API\SubscriptionController;
+use App\Http\Controllers\API\TicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +28,7 @@ Route::prefix('users')->group(function () {
     Route::post('login', [UserController::class, 'login']);
 });
 
-Route::middleware('auth.byId')->group(function () {
+Route::middleware('auth.user')->group(function () {
     Route::prefix('users')->group(function () {
         Route::get('', [UserController::class, 'getAll']);
         Route::get('{id}', [UserController::class, 'get']);
@@ -51,7 +51,6 @@ Route::middleware('auth.byId')->group(function () {
         Route::put('', [SocialController::class, 'update']);
         Route::delete('{id}', [SocialController::class, 'delete']);
     });
-
 
     Route::prefix('templates')->group(function () {
         Route::get('', [TemplateController::class, 'getAll']);

@@ -1,31 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use App\Traits\Uploadable;
 
-use App\Models\Ticket as Model;
+use App\Models\Social as Model;
 
-class TicketController extends Controller
+class SocialController extends Controller
 {
-    use Uploadable;
+    public $model = "Social";
 
-    public $model = "Ticket";
-
-    public $relations = ["user"];
-
-    public $rules = [
-        'type' => 'required|max:255',
-        'subject' => 'required|max:255',
-        'description' => 'required',
-        'status' => 'required|max:255',
-        'image' => 'required',
-    ];
-
-    public $directory = "tickets";
+    public $relations = ["profile"];
 
     public function getAll()
     {
@@ -50,15 +36,13 @@ class TicketController extends Controller
 
     public function create(Request $request)
     {
-        $user_id = $request->header('user-id');
-        $validated = $request->validate($this->rules);
-        $validated['user_id'] = $user_id;
+        $rules = [
+            'profile_id' => 'required|exists:profiles,id',
+            'platform' => 'required|max:255',
+            'url' => 'required|max:255',
+        ];
+        $validated = $request->validate($rules);
 
-        $key = 'image';
-        if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($request->file($key), $this->directory);
-        }
-        
         $record = Model::create($validated);
         $code = 201;
         $response = [
@@ -70,20 +54,15 @@ class TicketController extends Controller
 
     public function update(Request $request)
     {
-        $user_id = $request->header('user-id');
-        $this->rules['id'] = 'required|exists:tickets,id';
-        $this->rules['image'] = 'nullable';
-        $validated = $request->validate($this->rules);
-        $validated['user_id'] = $user_id;
+        $rules = [
+            'id' => 'required|exists:socials,id',
+            'profile_id' => 'nullable|exists:profiles,id',
+            'platform' => 'nullable|max:255',
+            'url' => 'nullable|max:255',
+        ];
+        $validated = $request->validate($rules);
 
         $record = Model::find($validated['id']);
-
-        $key = 'image';
-        if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete($this->directory."/$record[$key]");
-            $validated[$key] = $this->upload($request->file($key), $this->directory);
-        }
-
         $record->update($validated);
         $code = 200;
         $response = ['message' => "Updated $this->model", 'record' => $record];
