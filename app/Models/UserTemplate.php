@@ -10,6 +10,8 @@ class UserTemplate extends Model
 {
     use HasFactory, HasUlids;
 
+    protected $table = "users_templates";
+
     protected $fillable = [
         'user_id',
         'template_id',
