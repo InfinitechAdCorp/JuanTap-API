@@ -15,8 +15,8 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('template_id');
             $table->foreignUlid('user_id');
-            $table->boolean('published');
-            $table->boolean('favorite');
+            $table->boolean('published')->default(0);
+            $table->boolean('favorite')->default(0);
             $table->timestamps();
         });
     }
