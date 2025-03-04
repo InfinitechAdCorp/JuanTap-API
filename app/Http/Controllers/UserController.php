@@ -158,7 +158,7 @@ class UserController extends Controller
             'password' => 'required|min:8',
         ]);
 
-        $record = Model::with('provider')->where('email', $validated['email'])->first();
+        $record = Model::with($this->relations)->where('email', $validated['email'])->first();
         $isValid = Hash::check($validated['password'], $record->password);
 
         if ($record && $isValid) {
