@@ -16,11 +16,9 @@ class TemplateUser extends Model
         'template_id',
         'user_id',
         'published',
-        'favorite',
     ];
 
     protected $attributes = [
         'published' => 0,
-        'favorite' => 0,
     ];
 }
