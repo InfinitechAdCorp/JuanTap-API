@@ -18,4 +18,9 @@ class TemplateUser extends Model
         'published',
         'favorite',
     ];
+
+    protected $attributes = [
+        'published' => 0,
+        'favorite' => 0,
+    ];
 }
