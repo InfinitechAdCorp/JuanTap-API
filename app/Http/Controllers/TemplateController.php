@@ -10,6 +10,7 @@ use App\Traits\Uploadable;
 use App\Models\Template as Model;
 use App\Models\User;
 use App\Models\TemplateUser;
+use App\Models\FavoriteTemplate;
 
 class TemplateController extends Controller
 {
@@ -121,6 +122,34 @@ class TemplateController extends Controller
         $code = 200;
         $response = [
             'message' => "Published $this->model",
+            'record' => $record,
+        ];
+        return response()->json($response, $code);
+    }
+
+    public function favoriteTemplate(Request $request, $id) {
+        $data['user_id'] = $request->header('user-id');
+        $data['template_id'] = $id;
+
+        FavoriteTemplate::updateOrcreate(['template_id' => $data['template_id']], $data);
+        $record = User::with('templates')->where('id', $data['user_id'])->first();
+        $code = 201;
+        $response = [
+            'message' => "Added $this->model to Favorites",
+            'record' => $record,
+        ];
+        return response()->json($response, $code);
+    }
+
+    public function unfavoriteTemplate(Request $request, $id) {
+        $data['user_id'] = $request->header('user-id');
+        $data['template_id'] = $id;
+
+        FavoriteTemplate::where('template_id', $data['template_id'])->first()->delete();
+        $record = User::with('templates')->where('id', $data['user_id'])->first();
+        $code = 200;
+        $response = [
+            'message' => "Added $this->model to Favorites",
             'record' => $record,
         ];
         return response()->json($response, $code);

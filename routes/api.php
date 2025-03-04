@@ -60,6 +60,8 @@ Route::middleware('auth.byId')->group(function () {
         Route::put('', [TemplateController::class, 'update']);
         Route::delete('{id}', [TemplateController::class, 'delete']);
         Route::post('publish/{id}', [TemplateController::class, 'publishTemplate']);
+        Route::post('favorite/{id}', [TemplateController::class, 'favoriteTemplate']);
+        Route::delete('favorite/{id}', [TemplateController::class, 'unfavoriteTemplate']);
     });
 
     Route::prefix('subscriptions')->group(function () {
