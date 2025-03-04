@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
-class UserTemplate extends Model
+class TemplateUser extends Model
 {
     use HasFactory, HasUlids;
 
-    protected $table = "users_templates";
+    protected $table = "template_user";
 
     protected $fillable = [
-        'user_id',
         'template_id',
+        'user_id',
         'published',
     ];
 }

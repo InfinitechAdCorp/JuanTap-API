@@ -31,6 +31,6 @@ class User extends Authenticatable
 
     public function templates()
     {
-        return $this->belongsToMany(Template::class);
+        return $this->belongsToMany(Template::class)->withPivot('published');
     }
 }

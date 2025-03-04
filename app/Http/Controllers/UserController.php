@@ -14,7 +14,7 @@ class UserController extends Controller
 {
     public $model = "User";
 
-    public $relations = ['provider', 'profile.socials'];
+    public $relations = ['provider', 'profile.socials', 'templates'];
 
     public function getAll()
     {

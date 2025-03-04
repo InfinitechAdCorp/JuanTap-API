@@ -9,7 +9,7 @@ use App\Traits\Uploadable;
 
 use App\Models\Template as Model;
 use App\Models\User;
-use App\Models\UserTemplate;
+use App\Models\TemplateUser;
 
 class TemplateController extends Controller
 {
@@ -113,7 +113,7 @@ class TemplateController extends Controller
             ['template_id', $data['template_id']],
             ['published', 1],
         ];
-        $record = UserTemplate::where($where)->first();
+        $record = TemplateUser::where($where)->first();
 
         if ($record) {
             $code = 422;
@@ -122,9 +122,9 @@ class TemplateController extends Controller
             ];
         }
         else {
-            UserTemplate::where('user_id', $data['user_id'])->update(['published' => 0]);
+            TemplateUser::where('user_id', $data['user_id'])->update(['published' => 0]);
 
-            UserTemplate::create($data);
+            TemplateUser::create($data);
             $record = User::with('templates')->where('id', $data['user_id'])->first();
             $code = 201;
             $response = [
