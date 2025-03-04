@@ -15,7 +15,7 @@ class TemplateController extends Controller
 {
     use Uploadable;
 
-    public $model = "Templates";
+    public $model = "Template";
 
     public $rules = [
         'name' => 'required|max:255',
@@ -104,21 +104,34 @@ class TemplateController extends Controller
 
     public function publishTemplate(Request $request, $id)
     {
-        $user_id = $request->header('user-id');
-
-        $data['user_id'] = $user_id;
+        $data['user_id'] = $request->header('user-id');
         $data['template_id'] = $id;
         $data['published'] = 1;
 
-        UserTemplate::where('user_id', $user_id)->update(['published' => 0]);
-
-        UserTemplate::create($data);
-        $record = User::with('templates')->where('id', $user_id)->first();
-        $code = 201;
-        $response = [
-            'message' => "Published $this->model",
-            'record' => $record,
+        $where = [
+            ['user_id', $data['user_id']],
+            ['template_id', $data['template_id']],
+            ['published', 1],
         ];
+        $record = UserTemplate::where($where)->first();
+
+        if ($record) {
+            $code = 422;
+            $response = [
+                'message' => "$this->model Is Already Published",
+            ];
+        }
+        else {
+            UserTemplate::where('user_id', $data['user_id'])->update(['published' => 0]);
+
+            UserTemplate::create($data);
+            $record = User::with('templates')->where('id', $data['user_id'])->first();
+            $code = 201;
+            $response = [
+                'message' => "Published $this->model",
+                'record' => $record,
+            ];
+        }
         return response()->json($response, $code);
     }
 }

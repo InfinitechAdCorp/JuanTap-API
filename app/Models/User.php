@@ -16,7 +16,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
-        'type',
+        'role',
     ];
 
     public function provider()

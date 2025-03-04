@@ -64,7 +64,7 @@ class UserController extends Controller
             'id' => 'required|max:255|exists:users,id',
             'username' => 'nullable|max:255|unique:users,username',
             'password' => 'nullable|min:8|max:255',
-            'type' => 'nullable|max:255',
+            'role' => 'nullable|max:255',
             'name' => 'required|max:255',
             'account_id' => 'required|max:255',
             'access_token' => 'required|max:255',
@@ -89,7 +89,7 @@ class UserController extends Controller
             'username' => 'nullable|max:255|unique:users,username',
             'email' => 'required|max:255|email|unique:users,email',
             'password' => 'required|min:8|max:255',
-            'type' => 'nullable|max:255',
+            'role' => 'nullable|max:255',
         ]);
         $validated['password'] = Hash::make($validated['password']);
 
@@ -113,7 +113,7 @@ class UserController extends Controller
                 'username' => 'nullable|max:255|unique:users,username',
                 'email' => 'required|max:255|email',
                 'password' => 'nullable|min:8|max:255',
-                'type' => 'nullable|max:255',
+                'role' => 'nullable|max:255',
                 'name' => 'required|max:255',
                 'account_id' => 'required|max:255',
                 'access_token' => 'required|max:255',
@@ -123,7 +123,7 @@ class UserController extends Controller
                 'username' => 'nullable|max:255|unique:users,username',
                 'email' => 'required|max:255|email',
                 'password' => 'required|min:8|max:255',
-                'type' => 'nullable|max:255',
+                'role' => 'nullable|max:255',
                 'name' => 'required|max:255',
             ]);
             $validated['password'] = Hash::make($validated['password']);
