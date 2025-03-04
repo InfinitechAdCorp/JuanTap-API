@@ -102,22 +102,21 @@ class TemplateController extends Controller
         return response()->json($response, $code);
     }
 
-    public function addToCollection(Request $request)
+    public function publishTemplate(Request $request, $id)
     {
         $user_id = $request->header('user-id');
 
-        $rules = [
-            'template_id' => 'required|exists:templates,id',
-        ];
+        $data['user_id'] = $user_id;
+        $data['template_id'] = $id;
+        $data['published'] = 1;
 
-        $validated = $request->validate($rules);
-        $validated['user_id'] = $user_id;
+        Model::where('user_id', $user_id)->update(['published', 0]);
 
-        Model::create($validated);
+        Model::create($data);
         $record = User::with('templates')->where('id', $user_id)->first();
         $code = 201;
         $response = [
-            'message' => "Created $this->model",
+            'message' => "Published $this->model",
             'record' => $record,
         ];
         return response()->json($response, $code);
