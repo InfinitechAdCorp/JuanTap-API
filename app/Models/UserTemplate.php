@@ -13,5 +13,6 @@ class UserTemplate extends Model
     protected $fillable = [
         'user_id',
         'template_id',
+        'chosen',
     ];
 }

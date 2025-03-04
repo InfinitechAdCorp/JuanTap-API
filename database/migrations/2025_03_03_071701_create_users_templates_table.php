@@ -15,6 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id');
             $table->foreignUlid('template_id');
+            $table->boolean('chosen');
             $table->timestamps();
         });
     }
