@@ -138,7 +138,6 @@ class ProfileController extends Controller
 
         $key = 'avatar';
         if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete("avatars/$record[$key]");
             $validated[$key] = $this->upload($request->file($key), "avatars");
         }
 

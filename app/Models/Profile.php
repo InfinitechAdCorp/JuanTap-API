@@ -22,7 +22,8 @@ class Profile extends Model
     public static function booted()
     {
         self::updated(function (Profile $record): void {
-            Storage::disk('s3')->delete("avatars/$record->avatar");
+            $avatar = $record->getOriginal('avatar');
+            Storage::disk('s3')->delete("avatars/$avatar");
         });
 
         self::deleted(function (Profile $record): void {
