@@ -137,6 +137,9 @@ class TemplateController extends Controller
             ['template_id', $data['template_id']],
         ];
         $record = TemplateUser::where($where)->first();
+        if ($record) {
+            $record['favorite'] == 0 ? $data['favorite'] = 1 : $data['favorite'] = 1; 
+        }
 
         TemplateUser::updateOrcreate(['template_id' => $data['template_id']], $data);
         $record = User::with('templates')->where('id', $data['user_id'])->first();
