@@ -114,22 +114,37 @@ class TemplateController extends Controller
         ];
         $record = TemplateUser::where($where)->first();
 
-        if ($record && $record->published == 1) {
-            $code = 422;
-            $response = [
-                'message' => "$this->model Is Already Published",
-            ];
-        } else {
-            TemplateUser::where('user_id', $data['user_id'])->update(['published' => 0]);
+        TemplateUser::where('user_id', $data['user_id'])->update(['published' => 0]);
 
-            TemplateUser::updateOrcreate(['template_id' => $data['template_id']], $data);
-            $record = User::with('templates')->where('id', $data['user_id'])->first();
-            $code = 200;
-            $response = [
-                'message' => "Published $this->model",
-                'record' => $record,
-            ];
-        }
+        TemplateUser::updateOrcreate(['template_id' => $data['template_id']], $data);
+        $record = User::with('templates')->where('id', $data['user_id'])->first();
+        $code = 200;
+        $response = [
+            'message' => "Published $this->model",
+            'record' => $record,
+        ];
+        return response()->json($response, $code);
+    }
+
+    public function favoriteTemplate(Request $request, $id)
+    {
+        $data['user_id'] = $request->header('user-id');
+        $data['template_id'] = $id;
+        $data['favorite'] = 1;
+
+        $where = [
+            ['user_id', $data['user_id']],
+            ['template_id', $data['template_id']],
+        ];
+        $record = TemplateUser::where($where)->first();
+
+        TemplateUser::updateOrcreate(['template_id' => $data['template_id']], $data);
+        $record = User::with('templates')->where('id', $data['user_id'])->first();
+        $code = 200;
+        $response = [
+            'message' => "Published $this->model",
+            'record' => $record,
+        ];
         return response()->json($response, $code);
     }
 }

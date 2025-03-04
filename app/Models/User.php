@@ -38,4 +38,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Template::class)->withPivot('published')->wherePivot('published', 1);
     }
+
+    public function favorite_templates()
+    {
+        return $this->belongsToMany(Template::class)->withPivot('published')->wherePivot('favorite', 1);
+    }
 }

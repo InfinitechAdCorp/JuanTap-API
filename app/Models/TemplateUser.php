@@ -16,5 +16,6 @@ class TemplateUser extends Model
         'template_id',
         'user_id',
         'published',
+        'favorite',
     ];
 }
