@@ -32,7 +32,7 @@ class TemplateController extends Controller
     {
         $records = Model::all();
         foreach ($records as $record) {
-            $record['favorite_count'] = FavoriteTemplate::where('template_id', $record['templated_id'])->get()->count();
+            $record['favorites'] = FavoriteTemplate::where('template_id', $record['templated_id'])->get()->count();
         }
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         $code = 200;
