@@ -31,9 +31,9 @@ class TemplateController extends Controller
     public function getAll()
     {
         $records = Model::with('users_favorite')->get();
-        // foreach ($records as $record) {
-        //     $record['favorites'] = FavoriteTemplate::where('template_id', $record['templated_id'])->get()->count();
-        // }
+        foreach ($records as $record) {
+            $record['favorites'] = $record['users_favorite']->count();
+        }
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         $code = 200;
         return response()->json($response, $code);
