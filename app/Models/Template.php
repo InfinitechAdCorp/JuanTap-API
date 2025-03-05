@@ -31,7 +31,7 @@ class Template extends Model
         return $this->belongsToMany(User::class);
     }
 
-    public function users_favorite() {
+    public function favorites() {
         return $this->belongsToMany(User::class, 'favorite_templates');
     }
 }
