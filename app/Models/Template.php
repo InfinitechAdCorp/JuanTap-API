@@ -14,9 +14,14 @@ class Template extends Model
     protected $fillable = [
         'name',
         'price',
+        'views',
         'description',
         'file',
         'thumbnail',
+    ];
+
+    protected $attribues = [
+        "views" => 0,
     ];
 
     public static function booted()

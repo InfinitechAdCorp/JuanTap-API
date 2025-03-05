@@ -15,6 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->string('name');
             $table->decimal('price', 15, 2);
+            $table->integer('views');
             $table->text('description');
             $table->text('file');
             $table->string('thumbnail');

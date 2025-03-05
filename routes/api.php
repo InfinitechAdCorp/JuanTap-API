@@ -58,9 +58,10 @@ Route::middleware('auth.user')->group(function () {
         Route::post('', [TemplateController::class, 'create']);
         Route::put('', [TemplateController::class, 'update']);
         Route::delete('{id}', [TemplateController::class, 'delete']);
-        Route::post('publish/{id}', [TemplateController::class, 'publishTemplate']);
-        Route::post('favorite/{id}', [TemplateController::class, 'favoriteTemplate']);
-        Route::delete('favorite/{id}', [TemplateController::class, 'unfavoriteTemplate']);
+        Route::post('publish/{id}', [TemplateController::class, 'publish']);
+        Route::post('favorite/{id}', [TemplateController::class, 'favorite']);
+        Route::delete('favorite/{id}', [TemplateController::class, 'unfavorite']);
+        Route::get('view/{id}', [TemplateController::class, 'view']);
     });
 
     Route::prefix('subscriptions')->group(function () {
@@ -86,5 +87,6 @@ Route::prefix('guest')->group(function () {
     Route::prefix('templates')->group(function () {
         Route::get('', [TemplateController::class, 'getAll']);
         Route::get('{id}', [TemplateController::class, 'get']);
+        Route::get('view/{id}', [TemplateController::class, 'view']);
     });
 });

@@ -103,7 +103,7 @@ class TemplateController extends Controller
         return response()->json($response, $code);
     }
 
-    public function publishTemplate(Request $request, $id)
+    public function publish(Request $request, $id)
     {
         $data['user_id'] = $request->header('user-id');
         $data['template_id'] = $id;
@@ -127,7 +127,7 @@ class TemplateController extends Controller
         return response()->json($response, $code);
     }
 
-    public function favoriteTemplate(Request $request, $id) {
+    public function favorite(Request $request, $id) {
         $data['template_id'] = $id;
         $data['user_id'] = $request->header('user-id');
 
@@ -141,7 +141,7 @@ class TemplateController extends Controller
         return response()->json($response, $code);
     }
 
-    public function unfavoriteTemplate(Request $request, $id) {
+    public function unfavorite(Request $request, $id) {
         $data['template_id'] = $id;
         $data['user_id'] = $request->header('user-id');
 
@@ -155,6 +155,18 @@ class TemplateController extends Controller
         $code = 200;
         $response = [
             'message' => "Removed $this->model from Favorites",
+            'record' => $record,
+        ];
+        return response()->json($response, $code);
+    }
+
+    public function view($id) {
+        $record = Model::find($id);
+        $record->update(['views' => $record['views']+1]);
+
+        $code = 200;
+        $response = [
+            'message' => "Added View to Template",
             'record' => $record,
         ];
         return response()->json($response, $code);
