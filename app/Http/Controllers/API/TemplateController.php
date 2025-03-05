@@ -38,7 +38,7 @@ class TemplateController extends Controller
 
     public function get($id)
     {
-        $record = Model::where('id', $id)->first();
+        $record = Model::with('favorites')->where('id', $id)->first();
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
