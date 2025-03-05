@@ -14,11 +14,16 @@ class UserController extends Controller
 {
     public $model = "User";
 
-    public $relations = ['provider', 'profile.socials', 'templates.favorites', 'published_template', 'favorite_templates'];
+    public $relations = ['provider', 'profile.socials', 'templates.favorites', 'published_template', 'favorite_templates.favorites'];
 
     public function getAll()
     {
         $records = Model::with($this->relations)->get();
+        // foreach ($records as $record) {
+        //     foreach ($record['favorite_templates'] as $favorite_template) {
+        //         $favorite_template['favorites'] = 
+        //     } 
+        // }
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);
