@@ -128,10 +128,10 @@ class TemplateController extends Controller
     }
 
     public function favoriteTemplate(Request $request, $id) {
-        $data['user_id'] = $request->header('user-id');
         $data['template_id'] = $id;
+        $data['user_id'] = $request->header('user-id');
 
-        FavoriteTemplate::updateOrcreate(['template_id' => $data['template_id']], $data);
+        FavoriteTemplate::create($data);
         $record = User::with('templates')->where('id', $data['user_id'])->first();
         $code = 201;
         $response = [
@@ -142,10 +142,15 @@ class TemplateController extends Controller
     }
 
     public function unfavoriteTemplate(Request $request, $id) {
-        $data['user_id'] = $request->header('user-id');
         $data['template_id'] = $id;
+        $data['user_id'] = $request->header('user-id');
 
-        FavoriteTemplate::where('template_id', $data['template_id'])->first()->delete();
+        $where = [
+            ['template_id', $data['template_id']],
+            ['user_id', $data['user_id']],
+        ];
+
+        FavoriteTemplate::where($where)->first()->delete();
         $record = User::with('templates')->where('id', $data['user_id'])->first();
         $code = 200;
         $response = [
