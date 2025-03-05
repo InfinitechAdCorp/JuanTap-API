@@ -13,22 +13,32 @@ class Ticket extends Model
 
     protected $fillable = [
         'user_id',
-        'type',
         'subject',
         'description',
+        'type',
         'status',
         'image',
     ];
 
+    public static function booted()
+    {
+        self::updated(function (Ticket $record): void {
+            $directory = "tickets";
+            $key  = "image";
+            if ($record->isDirty($key)) {
+                Storage::disk('s3')->delete($directory . "/" . $record->getOriginal($key));
+            }
+        });
+
+        self::deleted(function (Ticket $record): void {
+            $directory = "tickets";
+            $key  = "image";
+            Storage::disk('s3')->delete($directory . "/" . $record[$key]);
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public static function booted()
-    {
-        self::deleted(function (Ticket $record): void {
-            Storage::disk('s3')->delete("tickets/$record->image");
-        });
     }
 }

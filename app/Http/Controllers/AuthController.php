@@ -10,7 +10,7 @@ use Laravel\Sanctum\PersonalAccessToken;
 use App\Models\User as Model;
 use App\Models\Provider;
 
-class UserController extends Controller
+class AuthController extends Controller
 {
     public $model = "User";
 
