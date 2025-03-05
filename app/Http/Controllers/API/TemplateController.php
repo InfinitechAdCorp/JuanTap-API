@@ -154,7 +154,7 @@ class TemplateController extends Controller
         $record = User::with('templates')->where('id', $data['user_id'])->first();
         $code = 200;
         $response = [
-            'message' => "Added $this->model to Favorites",
+            'message' => "Removed $this->model from Favorites",
             'record' => $record,
         ];
         return response()->json($response, $code);
