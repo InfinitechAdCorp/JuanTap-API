@@ -25,7 +25,7 @@ class Ticket extends Model
         self::updated(function (Ticket $record): void {
             $directory = "tickets";
             $key  = "image";
-            if ($record->isDirty($key)) {
+            if ($record->wasChanged($key)) {
                 Storage::disk('s3')->delete($directory . "/" . $record->getOriginal($key));
             }
         });
