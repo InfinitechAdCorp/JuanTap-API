@@ -19,11 +19,6 @@ class UserController extends Controller
     public function getAll()
     {
         $records = Model::with($this->relations)->get();
-        // foreach ($records as $record) {
-        //     foreach ($record['favorite_templates'] as $favorite_template) {
-        //         $favorite_template['favorites'] = 
-        //     } 
-        // }
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);
