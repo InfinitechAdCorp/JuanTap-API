@@ -40,7 +40,8 @@ Route::prefix('')->group(function () {
     Route::prefix('profiles')->group(function () {
         Route::get('', [ProfileController::class, 'getAll']);
         Route::get('{id}', [ProfileController::class, 'get']);
-        Route::put('', [ProfileController::class, 'upsert']);
+        Route::post('', [ProfileController::class, 'create']);
+        Route::put('', [ProfileController::class, 'update']);
         Route::delete('{id}', [ProfileController::class, 'delete']);
     });
 
