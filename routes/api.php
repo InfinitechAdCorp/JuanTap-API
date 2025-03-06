@@ -8,6 +8,7 @@ use App\Http\Controllers\API\SocialController;
 use App\Http\Controllers\API\TemplateController;
 use App\Http\Controllers\API\SubscriptionController;
 use App\Http\Controllers\API\TicketController;
+use App\Http\Controllers\API\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +81,10 @@ Route::middleware('auth.user')->group(function () {
         Route::put('', [TicketController::class, 'update']);
         Route::delete('{id}', [TicketController::class, 'delete']);
         Route::post('set-status', [TicketController::class, 'delete']);
+    });
+
+    Route::prefix('dashboard')->group(function () {
+        Route::get('get-counts', [DashboardController::class, 'getCounts']);
     });
 });
 
