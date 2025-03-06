@@ -16,27 +16,37 @@ class Template extends Model
         'price',
         'views',
         'description',
-        'file',
+        'content',
         'thumbnail',
     ];
 
-    protected $attribues = [
+    protected $attributes = [
         "views" => 0,
     ];
 
     public static function booted()
     {
+        self::updated(function (Template $record): void {
+            $directory = "templates";
+            $key  = "thumbnail";
+            if ($record->wasChanged($key)) {
+                Storage::disk('s3')->delete("$directory/" . $record->getOriginal($key));
+            }
+        });
+
         self::deleted(function (Template $record): void {
-            Storage::disk('s3')->delete("templates/$record->thumbnail");
+            $directory = "templates";
+            $key  = "thumbnail";
+            Storage::disk('s3')->delete("$directory/" . $record[$key]);
         });
     }
 
-    public function users()
+    public function collections_users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'collections');
     }
 
-    public function favorites() {
-        return $this->belongsToMany(User::class, 'favorite_templates');
+    public function favorites_users() {
+        return $this->belongsToMany(User::class, 'favorites');
     }
 }
