@@ -35,12 +35,7 @@ class Template extends Model
     {
         return $this->belongsToMany(User::class);
     }
-
-    public function users_count()
-    {
-        return $this->belongsToMany(User::class)->count();
-    }
-
+    
     public function favorites()
     {
         return $this->belongsToMany(User::class, 'favorite_templates');
