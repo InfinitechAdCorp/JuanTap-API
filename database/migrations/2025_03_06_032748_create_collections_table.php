@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('favorite_templates', function (Blueprint $table) {
+        Schema::create('collections', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('template_id');
             $table->foreignUlid('user_id');
+            $table->boolean('is_published');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('favorite_templates');
+        Schema::dropIfExists('collections');
     }
 };
