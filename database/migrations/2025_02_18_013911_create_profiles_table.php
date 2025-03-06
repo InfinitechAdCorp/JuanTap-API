@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('profiles', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id');
-            $table->string('name')->nullable();
-            $table->string('location')->nullable();
-            $table->text('bio')->nullable();
-            $table->string('avatar')->nullable();
+            $table->string('name');
+            $table->string('location');
+            $table->text('bio');
+            $table->string('avatar');
             $table->timestamps();
         });
     }

@@ -19,15 +19,27 @@ class Profile extends Model
         'avatar',
     ];
 
+    protected $attributes = [
+        'name' => '',
+        'location' => '',
+        'bio' => '',
+        'avatar' => '',
+    ];
+
     public static function booted()
     {
         self::updated(function (Profile $record): void {
-            $avatar = $record->getOriginal('avatar');
-            Storage::disk('s3')->delete("avatars/$avatar");
+            $directory = "avatars";
+            $key  = "avatar";
+            if ($record->wasChanged($key)) {
+                Storage::disk('s3')->delete("$directory/" . $record->getOriginal($key));
+            }
         });
 
         self::deleted(function (Profile $record): void {
-            Storage::disk('s3')->delete("avatars/$record->avatar");
+            $directory = "avatars";
+            $key  = "avatar";
+            Storage::disk('s3')->delete("$directory/" . $record[$key]);
         });
     }
 
