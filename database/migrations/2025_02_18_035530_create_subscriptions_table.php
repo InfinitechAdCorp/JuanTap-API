@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id');
-            $table->string('plan');
             $table->text('bs');
+            $table->string('type');
             $table->string('status');
             $table->timestamps();
         });
