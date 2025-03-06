@@ -11,13 +11,15 @@ use App\Models\Ticket;
 
 class DashboardController extends Controller
 {
-    public function getCounts()
+    public function getAll()
     {
         $counts['users'] = User::get()->count();
         $counts['templates'] = Template::get()->count();
         $counts['tickets'] = Ticket::get()->count();
 
-        $response = ['message' => "Fetched Counts", 'counts' => $counts];
+        $templates = Template::with('user')->get();
+
+        $response = ['message' => "Fetched Data", 'counts' => $counts, 'templates' => $templates];
         $code = 200;
         return response()->json($response, $code);
     }

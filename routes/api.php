@@ -84,7 +84,7 @@ Route::middleware('auth.user')->group(function () {
     });
 
     Route::prefix('dashboard')->group(function () {
-        Route::get('get-counts', [DashboardController::class, 'getCounts']);
+        Route::get('', [DashboardController::class, 'getAll']);
     });
 });
 
