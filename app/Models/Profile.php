@@ -19,13 +19,6 @@ class Profile extends Model
         'avatar',
     ];
 
-    protected $attributes = [
-        'name' => '',
-        'location' => '',
-        'bio' => '',
-        'avatar' => '',
-    ];
-
     public static function booted()
     {
         self::updated(function (Profile $record): void {

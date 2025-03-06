@@ -51,7 +51,9 @@ class TicketController extends Controller
         $validated = $request->validate($this->rules);
 
         $key = 'image';
-        $validated[$key] = $this->upload($this->directory, $request->file($key));
+        if ($request->hasFile($key)) {
+            $validated[$key] = $this->upload($this->directory, $request->file($key));
+        }
 
         $record = Model::create($validated);
 

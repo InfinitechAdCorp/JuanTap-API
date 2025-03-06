@@ -50,7 +50,9 @@ class ProfileController extends Controller
         $validated = $request->validate($this->rules);
 
         $key = 'avatar';
-        $validated[$key] = $this->upload($this->directory, $request->file($key));
+        if ($request->hasFile($key)) {
+            $validated[$key] = $this->upload($this->directory, $request->file($key));
+        }
 
         $record = Model::create($validated);
 
