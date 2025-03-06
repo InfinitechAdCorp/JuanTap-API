@@ -67,7 +67,7 @@ Route::prefix('')->group(function () {
         Route::put('', [SubscriptionController::class, 'update']);
         Route::delete('{id}', [SubscriptionController::class, 'delete']);
 
-        Route::post('set-status', [SubscriptionController::class, 'delete']);
+        Route::post('set-status', [SubscriptionController::class, 'setStatus']);
     });
 
     Route::prefix('tickets')->group(function () {
