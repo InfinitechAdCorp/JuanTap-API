@@ -20,7 +20,7 @@ class Template extends Model
         'thumbnail',
     ];
 
-    protected $attribues = [
+    protected $attributes = [
         "views" => 0,
     ];
 
