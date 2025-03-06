@@ -10,8 +10,13 @@ use App\Models\Social as Model;
 class SocialController extends Controller
 {
     public $model = "Social";
+    public $relations = ['profile'];
 
-    public $relations = ["profile"];
+    public $rules = [
+        'profile_id' => 'required|exists:profiles,id',
+        'platform' => 'required|max:255',
+        'url' => 'required|max:255',
+    ];
 
     public function getAll()
     {
@@ -25,47 +30,39 @@ class SocialController extends Controller
     {
         $record = Model::with($this->relations)->where('id', $id)->first();
         if ($record) {
-            $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
+            $code = 200;
         } else {
-            $code = 404;
             $response = ['message' => "$this->model Not Found"];
+            $code = 404;
         }
         return response()->json($response, $code);
     }
 
     public function create(Request $request)
     {
-        $rules = [
-            'profile_id' => 'required|exists:profiles,id',
-            'platform' => 'required|max:255',
-            'url' => 'required|max:255',
-        ];
-        $validated = $request->validate($rules);
+        $validated = $request->validate($this->rules);
 
         $record = Model::create($validated);
-        $code = 201;
+
         $response = [
             'message' => "Created $this->model",
             'record' => $record,
         ];
+        $code = 201;
         return response()->json($response, $code);
     }
 
     public function update(Request $request)
     {
-        $rules = [
-            'id' => 'required|exists:socials,id',
-            'profile_id' => 'nullable|exists:profiles,id',
-            'platform' => 'nullable|max:255',
-            'url' => 'nullable|max:255',
-        ];
-        $validated = $request->validate($rules);
+        $this->rules['id'] = 'required|exists:socials,id';
+        $validated = $request->validate($this->rules);
 
         $record = Model::find($validated['id']);
         $record->update($validated);
-        $code = 200;
+
         $response = ['message' => "Updated $this->model", 'record' => $record];
+        $code = 200;
         return response()->json($response, $code);
     }
 
@@ -74,13 +71,11 @@ class SocialController extends Controller
         $record = Model::find($id);
         if ($record) {
             $record->delete();
+            $response = ['message' => "Deleted $this->model"];
             $code = 200;
-            $response = [
-                'message' => "Deleted $this->model"
-            ];
         } else {
-            $code = 404;
             $response = ['message' => "$this->model Not Found"];
+            $code = 404;
         }
         return response()->json($response, $code);
     }
