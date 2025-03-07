@@ -80,7 +80,7 @@ Route::middleware('auth.user')->group(function () {
         Route::post('', [TicketController::class, 'create']);
         Route::put('', [TicketController::class, 'update']);
         Route::delete('{id}', [TicketController::class, 'delete']);
-        Route::post('set-status', [TicketController::class, 'delete']);
+        Route::post('set-status', [TicketController::class, 'setStatus']);
         Route::get('track/{number}', [TicketController::class, 'track']);
     });
 
