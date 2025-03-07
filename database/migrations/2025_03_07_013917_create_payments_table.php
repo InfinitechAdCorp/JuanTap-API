@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('reason');
             $table->string('method');
             $table->string('status');
+            $table->string('proof');
             $table->timestamps();
         });
     }
