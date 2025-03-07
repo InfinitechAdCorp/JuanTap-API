@@ -20,7 +20,7 @@ class Ticket extends Model
     ];
 
     protected $attributes = [
-        'number' => str_pad(mt_rand(000, 999), 3, '0', STR_PAD_LEFT),
+        'number' => str_pad(strval(mt_rand(000, 999)), 3, '0', STR_PAD_LEFT),
         'status' => 'Pending'
     ];
 
