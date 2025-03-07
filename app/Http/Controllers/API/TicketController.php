@@ -88,6 +88,20 @@ class TicketController extends Controller
         return response()->json($response, $code);
     }
 
+    public function setStatus(Request $request) {
+        $rules = [
+            'id' => 'required|exists:tickets,id',
+            'status' => 'required|max:255',
+        ];
+        $validated = $request->validate($rules);
+
+        $record = Model::find($validated['id']);
+        $record->update($validated);
+        $code = 200;
+        $response = ['message' => "Updated $this->model", 'record' => $record];
+        return response()->json($response, $code);
+    }
+
     public function track($number)
     {
         $record = Model::with($this->relations)->where('number', $number)->first();
