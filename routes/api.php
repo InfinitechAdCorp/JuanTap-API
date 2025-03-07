@@ -11,18 +11,13 @@ use App\Http\Controllers\API\TicketController;
 use App\Http\Controllers\API\PaymentController;
 
 Route::prefix('auth')->group(function () {
-    Route::post('by-email', [AuthController::class, 'getByEmail']);
-    Route::post('link-oauth', [AuthController::class, 'linkOAuth']);
+    Route::post('link', [AuthController::class, 'link']);
     Route::post('signup', [AuthController::class, 'signupByCredentials']);
     Route::put('', [AuthController::class, 'upsert']);
     Route::post('login', [AuthController::class, 'login']);
 
     Route::middleware('auth.user')->group(function () {
-        Route::get('', [AuthController::class, 'getAll']);
-        Route::get('{id}', [AuthController::class, 'get']);
         Route::post('logout', [AuthController::class, 'logout']);
-        Route::put('update/general', [AuthController::class, 'updateGeneralSettings']);
-        Route::put('update/password', [AuthController::class, 'updatePassword']);
     });
 });
 

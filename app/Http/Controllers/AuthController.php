@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Support\Facades\Hash;
 
 use App\Models\User as Model;
 use App\Models\Provider;
@@ -14,51 +14,7 @@ class AuthController extends Controller
 {
     public $model = "User";
 
-    public $relations = ['provider', 'profile.socials', 'templates.favorites', 'published_template', 'favorite_templates.favorites'];
-
-    public function getAll()
-    {
-        $records = Model::with($this->relations)->get();
-        $code = 200;
-        $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
-        return response()->json($response, $code);
-    }
-
-    public function get($id)
-    {
-        $record = Model::with($this->relations)->where('id', $id)->first();
-        if ($record) {
-            $code = 200;
-            $response = ['message' => "Fetched $this->model", 'record' => $record];
-        } else {
-            $code = 404;
-            $response = ['message' => "$this->model Not Found"];
-        }
-        return response()->json($response, $code);
-    }
-
-    public function getByEmail(Request $request)
-    {
-        $account_id = $request->account_id;
-        $record = Model::with($this->relations)->whereHas('provider', function ($result) use ($account_id) {
-            $result->where('account_id', $account_id);
-        })->first();
-
-        if (!$record) {
-            $record = Model::with($this->relations)->where('email', $request->email)->first();
-        }
-
-        if ($record) {
-            $code = 200;
-            $response = ['message' => "Fetched $this->model", 'record' => $record];
-        } else {
-            $code = 404;
-            $response = ['message' => "$this->model Not Found"];
-        }
-        return response()->json($response, $code);
-    }
-
-    public function linkOAuth(Request $request)
+    public function link(Request $request)
     {
         $validated = $request->validate([
             'id' => 'required|max:255|exists:users,id',
@@ -72,14 +28,15 @@ class AuthController extends Controller
 
         $record = Model::find($validated['id']);
         $validated['user_id'] = $record->id;
+
         $record->update($validated);
         Provider::updateOrCreate(['user_id' => $validated['user_id']], $validated);
 
-        $code = 200;
         $response = [
             'message' => "Account Linked",
             'record' => $record,
         ];
+        $code = 200;
         return response()->json($response, $code);
     }
 
@@ -93,14 +50,13 @@ class AuthController extends Controller
         ]);
         $validated['password'] = Hash::make($validated['password']);
 
-        $record = Model::create(
-            $validated
-        );
-        $code = 201;
+        $record = Model::create($validated);
+
         $response = [
             'message' => "Created $this->model",
             'record' => $record,
         ];
+        $code = 201;
         return response()->json($response, $code);
     }
 
@@ -142,12 +98,12 @@ class AuthController extends Controller
             );
         }
 
-        $code = $record->wasRecentlyCreated ? 201 : 200;
-        $action = $code == 201 ? "Created" : "Updated";
+        $action = $record->wasRecentlyCreated ? "Created" : "Updated";
         $response = [
             'message' => "$action $this->model",
             'record' => $record,
         ];
+        $code = $action == "Created" ? 201 : 200;
         return response()->json($response, $code);
     }
 
@@ -158,20 +114,20 @@ class AuthController extends Controller
             'password' => 'required|min:8',
         ]);
 
-        $record = Model::with($this->relations)->where('email', $validated['email'])->first();
+        $record = Model::where('email', $validated['email'])->first();
         $isValid = Hash::check($validated['password'], $record->password);
 
         if ($record && $isValid) {
-            $code = 200;
             $response = [
                 'message' => 'Logged In Successfully',
                 'record' => $record,
             ];
+            $code = 200;
         } else {
-            $code = 401;
             $response = [
                 'message' => 'Invalid Credentials',
             ];
+            $code = 401;
         }
         return response()->json($response, $code);
     }
@@ -181,60 +137,8 @@ class AuthController extends Controller
         $record = PersonalAccessToken::findToken($request->bearerToken())->tokenable;
         PersonalAccessToken::where('tokenable_id', $record->id)->delete();
 
-        $code = 200;
         $response = ['message' => 'Logged Out Successfully'];
-        return response()->json($response, $code);
-    }
-
-    public function updateGeneralSettings(Request $request)
-    {
-        $user_id = $request->header('user-id');
-        $validated = $request->validate([
-            'username' => 'nullable|max:255',
-            'email' => 'nullable|max:255|email',
-        ]);
-
-        $record = Model::find($user_id);
-        $record->update($validated);
         $code = 200;
-        $response = ['message' => "Updated General Settings", 'record' => $record];
-        return response()->json($response, $code);
-    }
-
-    public function updatePassword(Request $request)
-    {
-        $isAuthorized = false;
-        $user_id = $request->header('user-id');
-        $validated = $request->validate([
-            'old' => 'nullable|min:8|max:255',
-            'new' => 'nullable|min:8|max:255',
-        ]);
-
-        $record = Model::find($user_id);
-        if ($record->password) {
-            $isValid = Hash::check($validated['old'], $record->password);
-            if ($isValid) {
-                $isAuthorized = true;
-            }
-            else {
-                $isAuthorized = false;
-            }
-        }
-        else {
-            $isAuthorized = true;
-        }
-
-        if ($isAuthorized) {
-            $record->update([
-                'password' => Hash::make($validated['new']),
-            ]);
-            $code = 200;
-            $response = ['message' => "Updated Password", 'record' => $record];
-        } else {
-            $code = 422;
-            $response = ['message' => "Invalid Credentials"];
-        }
-
         return response()->json($response, $code);
     }
 }
