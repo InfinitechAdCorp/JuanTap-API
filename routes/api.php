@@ -81,6 +81,7 @@ Route::middleware('auth.user')->group(function () {
         Route::put('', [TicketController::class, 'update']);
         Route::delete('{id}', [TicketController::class, 'delete']);
         Route::post('set-status', [TicketController::class, 'delete']);
+        Route::get('track/{number}', [TicketController::class, 'track']);
     });
 
     Route::prefix('dashboard')->group(function () {

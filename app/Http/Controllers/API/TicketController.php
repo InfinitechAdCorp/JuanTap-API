@@ -87,4 +87,17 @@ class TicketController extends Controller
         }
         return response()->json($response, $code);
     }
+
+    public function track($number)
+    {
+        $record = Model::with($this->relations)->where('number', $number)->first();
+        if ($record) {
+            $code = 200;
+            $response = ['message' => "Fetched $this->model", 'record' => $record];
+        } else {
+            $code = 404;
+            $response = ['message' => "$this->model Not Found"];
+        }
+        return response()->json($response, $code);
+    }
 }
