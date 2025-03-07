@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id');
+            $table->string('number')->unique();
             $table->string('subject');
             $table->text('description');
             $table->string('status');

@@ -12,6 +12,7 @@ class Ticket extends Model
 
     protected $fillable = [
         'user_id',
+        'number',
         'subject',
         'description',
         'status',
@@ -20,6 +21,14 @@ class Ticket extends Model
     protected $attributes = [
         'status' => 'Pending'
     ];
+
+    public static function booted()
+    {
+        self::creating(function (Ticket $record): void {
+            $number = mt_rand(000, 999);
+            $record->number = str_pad($number, 3, '0', STR_PAD_LEFT);
+        });
+    }
 
     public function user()
     {
