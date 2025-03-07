@@ -17,7 +17,6 @@ class TicketController extends Controller
     public $relations = ["user"];
 
     public $rules = [
-        'type' => 'required|max:255',
         'subject' => 'required|max:255',
         'description' => 'required',
     ];
