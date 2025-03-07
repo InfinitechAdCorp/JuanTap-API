@@ -13,6 +13,9 @@ class AuthenticateUser
         $id = $request->header('user-id');
         $record = User::find($id);
         if ($record) {
+            if ($request->isMethod('post') || $request->isMethod('put')) {
+                $request->request->add(['user_id' => $id]);
+            }
             return $next($request);
         } else {
             return response()->json(['message' => "Invalid User ID"], 401);

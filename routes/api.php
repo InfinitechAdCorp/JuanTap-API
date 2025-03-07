@@ -82,4 +82,6 @@ Route::prefix('')->group(function () {
     });
 });
 
-Route::prefix('user')->middleware('auth.user')->group(function () {});
+Route::prefix('user')->middleware('auth.user')->group(function () {
+    Route::post('templates', [TicketController::class, 'create']);
+});
