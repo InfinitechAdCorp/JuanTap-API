@@ -14,15 +14,12 @@ class TicketController extends Controller
 
     public $model = "Ticket";
     public $relations = ["user"];
-    public $directory = "tickets";
 
     public $rules = [
         'user_id' => 'required|exists:users,id',
         'subject' => 'required|max:255',
         'description' => 'required',
         'type' => 'required|max:255',
-        'status' => 'required|max:255',
-        'image' => 'required',
     ];
 
     public function getAll()
@@ -50,11 +47,6 @@ class TicketController extends Controller
     {
         $validated = $request->validate($this->rules);
 
-        $key = 'image';
-        if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($this->directory, $request->file($key));
-        }
-
         $record = Model::create($validated);
 
         $response = [
@@ -68,16 +60,9 @@ class TicketController extends Controller
     public function update(Request $request)
     {
         $this->rules['id'] = 'required|exists:tickets,id';
-        $this->rules['image'] = 'nullable';
         $validated = $request->validate($this->rules);
 
         $record = Model::find($validated['id']);
-
-        $key = 'image';
-        if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($this->directory, $request->file($key));
-        }
-
         $record->update($validated);
 
         $response = ['message' => "Updated $this->model", 'record' => $record];

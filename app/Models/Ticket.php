@@ -17,25 +17,11 @@ class Ticket extends Model
         'description',
         'type',
         'status',
-        'image',
     ];
 
-    public static function booted()
-    {
-        self::updated(function (Ticket $record): void {
-            $directory = "tickets";
-            $key  = "image";
-            if ($record->wasChanged($key)) {
-                Storage::disk('s3')->delete("$directory/" . $record->getOriginal($key));
-            }
-        });
-
-        self::deleted(function (Ticket $record): void {
-            $directory = "tickets";
-            $key  = "image";
-            Storage::disk('s3')->delete("$directory/" . $record[$key]);
-        });
-    }
+    protected $attributes = [
+        'status' => 'Pending'
+    ];
 
     public function user()
     {
