@@ -13,12 +13,14 @@ class Ticket extends Model
 
     protected $fillable = [
         'user_id',
+        'number',
         'subject',
         'description',
         'status',
     ];
 
     protected $attributes = [
+        'number' => str_pad(mt_rand(000, 999), 3, '0', STR_PAD_LEFT),
         'status' => 'Pending'
     ];
 
