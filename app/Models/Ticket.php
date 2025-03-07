@@ -17,18 +17,14 @@ class Ticket extends Model
         'subject',
         'description',
         'status',
-        'image',
+    ];
+
+    protected $attributes = [
+        'status' => 'Pending'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public static function booted()
-    {
-        self::deleted(function (Ticket $record): void {
-            Storage::disk('s3')->delete("tickets/$record->image");
-        });
     }
 }

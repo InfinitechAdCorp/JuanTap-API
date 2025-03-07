@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use App\Traits\Uploadable;
 
 use App\Models\Ticket as Model;
@@ -21,12 +20,8 @@ class TicketController extends Controller
         'type' => 'required|max:255',
         'subject' => 'required|max:255',
         'description' => 'required',
-        'status' => 'required|max:255',
-        'image' => 'required',
     ];
-
-    public $directory = "tickets";
-
+    
     public function getAll()
     {
         $records = Model::with($this->relations)->get();
@@ -53,11 +48,6 @@ class TicketController extends Controller
         $user_id = $request->header('user-id');
         $validated = $request->validate($this->rules);
         $validated['user_id'] = $user_id;
-
-        $key = 'image';
-        if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($request->file($key), $this->directory);
-        }
         
         $record = Model::create($validated);
         $code = 201;
@@ -72,19 +62,12 @@ class TicketController extends Controller
     {
         $user_id = $request->header('user-id');
         $this->rules['id'] = 'required|exists:tickets,id';
-        $this->rules['image'] = 'nullable';
         $validated = $request->validate($this->rules);
         $validated['user_id'] = $user_id;
 
         $record = Model::find($validated['id']);
-
-        $key = 'image';
-        if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete($this->directory."/$record[$key]");
-            $validated[$key] = $this->upload($request->file($key), $this->directory);
-        }
-
         $record->update($validated);
+
         $code = 200;
         $response = ['message' => "Updated $this->model", 'record' => $record];
         return response()->json($response, $code);
