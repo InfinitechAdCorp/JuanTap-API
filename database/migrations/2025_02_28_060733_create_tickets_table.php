@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignUlid('user_id');
             $table->string('subject');
             $table->text('description');
-            $table->string('type');
             $table->string('status');
             $table->timestamps();
         });

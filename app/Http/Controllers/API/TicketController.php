@@ -19,7 +19,6 @@ class TicketController extends Controller
         'user_id' => 'required|exists:users,id',
         'subject' => 'required|max:255',
         'description' => 'required',
-        'type' => 'required|max:255',
     ];
 
     public function getAll()
