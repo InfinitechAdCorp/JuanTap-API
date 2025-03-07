@@ -5,18 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, HasApiTokens, Notifiable, HasUlids;
+    use HasFactory, HasApiTokens, HasUlids, Notifiable;
 
     protected $fillable = [
-        'username',
+        'name',
         'email',
         'password',
         'role',
+    ];
+
+    protected $hidden = [
+        'password'
+    ];
+
+    protected $attributes = [
+        'role' => 'User'
     ];
 
     public function provider()
@@ -24,27 +32,23 @@ class User extends Authenticatable
         return $this->hasOne(Provider::class);
     }
 
-    public function subscription()
-    {
-        return $this->hasOne(Subscription::class);
-    }
-
     public function profile()
     {
         return $this->hasOne(Profile::class);
     }
 
-    public function templates()
+    public function favorites_templates()
     {
-        return $this->belongsToMany(Template::class)->withPivot('published');
+        return $this->belongsToMany(Template::class, 'favorites');
+    }
+
+    public function collections_templates()
+    {
+        return $this->belongsToMany(Template::class, 'collections')->withPivot('published');
     }
 
     public function published_template()
     {
-        return $this->belongsToMany(Template::class)->withPivot('published')->wherePivot('published', 1);
-    }
-
-    public function favorite_templates() {
-        return $this->belongsToMany(Template::class, 'favorite_templates');
+        return $this->belongsToMany(Template::class, 'collections')->withPivot('published')->wherePivot('published', 1);
     }
 }

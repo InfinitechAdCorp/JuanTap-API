@@ -13,7 +13,7 @@ class TemplateController extends Controller
     use Uploadable;
 
     public $model = "Template";
-    public $relations = ["collections_users", "favorites_users"];
+    public $relations = ["favorites_users", "collections_users"];
     public $directory = "templates";
 
     public $rules = [

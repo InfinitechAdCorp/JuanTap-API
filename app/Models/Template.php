@@ -41,12 +41,12 @@ class Template extends Model
         });
     }
 
+    public function favorites_users() {
+        return $this->belongsToMany(User::class, 'favorites');
+    }
+
     public function collections_users()
     {
         return $this->belongsToMany(User::class, 'collections');
-    }
-
-    public function favorites_users() {
-        return $this->belongsToMany(User::class, 'favorites');
     }
 }
