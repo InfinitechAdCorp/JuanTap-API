@@ -8,6 +8,7 @@ use App\Http\Controllers\API\SocialController;
 use App\Http\Controllers\API\TemplateController;
 use App\Http\Controllers\API\SubscriptionController;
 use App\Http\Controllers\API\TicketController;
+use App\Http\Controllers\API\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +80,16 @@ Route::prefix('')->group(function () {
         Route::delete('{id}', [TicketController::class, 'delete']);
 
         Route::post('set-status', [TicketController::class, 'setStatus']);
+    });
+
+    Route::prefix('payments')->group(function () {
+        Route::get('', [PaymentController::class, 'getAll']);
+        Route::get('{id}', [PaymentController::class, 'get']);
+        Route::post('', [PaymentController::class, 'create']);
+        Route::put('', [PaymentController::class, 'update']);
+        Route::delete('{id}', [PaymentController::class, 'delete']);
+
+        Route::post('set-status', [PaymentController::class, 'setStatus']);
     });
 });
 
