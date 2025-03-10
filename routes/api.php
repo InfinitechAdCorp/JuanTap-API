@@ -9,6 +9,7 @@ use App\Http\Controllers\API\TemplateController;
 use App\Http\Controllers\API\SubscriptionController;
 use App\Http\Controllers\API\TicketController;
 use App\Http\Controllers\API\PaymentController;
+use App\Http\Controllers\API\ArticleController;
 
 Route::prefix('auth')->group(function () {
     Route::post('link', [AuthController::class, 'link']);
@@ -74,6 +75,14 @@ Route::prefix('')->group(function () {
         Route::delete('{id}', [PaymentController::class, 'delete']);
 
         Route::post('set-status', [PaymentController::class, 'setStatus']);
+    });
+
+    Route::prefix('articles')->group(function () {
+        Route::get('', [ArticleController::class, 'getAll']);
+        Route::get('{id}', [ArticleController::class, 'get']);
+        Route::post('', [ArticleController::class, 'create']);
+        Route::put('', [ArticleController::class, 'update']);
+        Route::delete('{id}', [ArticleController::class, 'delete']);
     });
 });
 
