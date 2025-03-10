@@ -4,17 +4,15 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Traits\Uploadable;
 
 use App\Models\Ticket as Model;
+use App\Models\Status;
 
 class TicketController extends Controller
 {
-    use Uploadable;
-
     public $model = "Ticket";
 
-    public $relations = ["user"];
+    public $relations = ["user", "statuses"];
 
     public $rules = [
         'subject' => 'required|max:255',
@@ -96,9 +94,15 @@ class TicketController extends Controller
         $validated = $request->validate($rules);
 
         $record = Model::find($validated['id']);
-        $record->update($validated);
+
+        if ($validated['status'] == "Submitted") {
+            $record->statuses()->delete();
+        }
+
+        $record->statuses()->create($validated);
+
         $code = 200;
-        $response = ['message' => "Updated $this->model", 'record' => $record];
+        $response = ['message' => "Updated Status of $this->model", 'record' => $record];
         return response()->json($response, $code);
     }
 

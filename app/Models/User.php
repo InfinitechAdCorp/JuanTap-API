@@ -19,6 +19,10 @@ class User extends Authenticatable
         'role',
     ];
 
+    protected $attributes = [
+        'role' => 'User'
+    ];
+
     public function provider()
     {
         return $this->hasOne(Provider::class);
