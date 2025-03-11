@@ -87,11 +87,13 @@ class ChangeController extends Controller
             ->orderBy('month', 'desc')
             ->get();
 
+        $months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
         foreach ($records as $record) {
-            $record['year_month'] = "$record->year-" . str_pad($record->month, 2, "0", STR_PAD_LEFT);
+            $record['month_year'] = $months[$record->month - 1] . " $record->year";
         }
 
-        $records = $records->groupBy('year_month');
+        $records = $records->groupBy('month_year');
 
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         $code = 200;
