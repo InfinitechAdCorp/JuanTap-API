@@ -9,6 +9,7 @@ use App\Http\Controllers\API\TemplateController;
 use App\Http\Controllers\API\SubscriptionController;
 use App\Http\Controllers\API\TicketController;
 use App\Http\Controllers\API\DashboardController;
+use App\Http\Controllers\API\ChangeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,6 +73,16 @@ Route::middleware('auth.user')->group(function () {
         Route::put('', [SubscriptionController::class, 'update']);
         Route::delete('{id}', [SubscriptionController::class, 'delete']);
         Route::post('set-status', [SubscriptionController::class, 'delete']);
+    });
+
+    Route::prefix('changes')->group(function () {
+        Route::get('by-month', [ChangeController::class, 'getAllByMonth']);
+        
+        Route::get('', [ChangeController::class, 'getAll']);
+        Route::get('{id}', [ChangeController::class, 'get']);
+        Route::post('', [ChangeController::class, 'create']);
+        Route::put('', [ChangeController::class, 'update']);
+        Route::delete('{id}', [ChangeController::class, 'delete']);
     });
 
     Route::prefix('tickets')->group(function () {
