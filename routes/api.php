@@ -10,6 +10,7 @@ use App\Http\Controllers\API\SubscriptionController;
 use App\Http\Controllers\API\TicketController;
 use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\ChangeController;
+use App\Http\Controllers\API\RecipientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,6 +99,14 @@ Route::middleware('auth.user')->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('', [DashboardController::class, 'getAll']);
     });
+
+    Route::prefix('recipients')->group(function () {
+        Route::get('', [RecipientController::class, 'getAll']);
+        Route::get('{id}', [RecipientController::class, 'get']);
+        Route::post('', [RecipientController::class, 'create']);
+        Route::put('', [RecipientController::class, 'update']);
+        Route::delete('{id}', [SocialController::class, 'delete']);
+    });
 });
 
 Route::prefix('guest')->group(function () {
@@ -109,5 +118,9 @@ Route::prefix('guest')->group(function () {
 
     Route::prefix('changes')->group(function () {
         Route::get('by-month', [ChangeController::class, 'getAllByMonth']);
+    });
+
+    Route::prefix('recipients')->group(function () {
+        Route::post('', [RecipientController::class, 'create']);
     });
 });
