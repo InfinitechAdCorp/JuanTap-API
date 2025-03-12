@@ -72,7 +72,7 @@ Route::middleware('auth.user')->group(function () {
         Route::post('', [SubscriptionController::class, 'create']);
         Route::put('', [SubscriptionController::class, 'update']);
         Route::delete('{id}', [SubscriptionController::class, 'delete']);
-        Route::post('set-status', [SubscriptionController::class, 'delete']);
+        Route::post('set-status', [SubscriptionController::class, 'setStatus']);
     });
 
     Route::prefix('changes')->group(function () {
@@ -105,5 +105,9 @@ Route::prefix('guest')->group(function () {
         Route::get('', [TemplateController::class, 'getAll']);
         Route::get('{id}', [TemplateController::class, 'get']);
         Route::post('view/{id}', [TemplateController::class, 'view']);
+    });
+
+    Route::prefix('changes')->group(function () {
+        Route::get('by-month', [ChangeController::class, 'getAllByMonth']);
     });
 });
