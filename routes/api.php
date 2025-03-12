@@ -10,6 +10,7 @@ use App\Http\Controllers\API\SubscriptionController;
 use App\Http\Controllers\API\TicketController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\ArticleController;
+use App\Http\Controllers\API\RecipientController;
 use App\Http\Controllers\API\TestimonialController;
 
 Route::prefix('auth')->group(function () {
@@ -50,7 +51,7 @@ Route::prefix('')->group(function () {
 
     Route::prefix('subscriptions')->group(function () {
         Route::post('set-status', [SubscriptionController::class, 'setStatus']);
-        
+
         Route::get('', [SubscriptionController::class, 'getAll']);
         Route::get('{id}', [SubscriptionController::class, 'get']);
         Route::post('', [SubscriptionController::class, 'create']);
@@ -92,6 +93,14 @@ Route::prefix('')->group(function () {
         Route::post('', [TestimonialController::class, 'create']);
         Route::put('', [TestimonialController::class, 'update']);
         Route::delete('{id}', [TestimonialController::class, 'delete']);
+    });
+
+    Route::prefix('recipients')->group(function () {
+        Route::get('', [RecipientController::class, 'getAll']);
+        Route::get('{id}', [RecipientController::class, 'get']);
+        Route::post('', [RecipientController::class, 'create']);
+        Route::put('', [RecipientController::class, 'update']);
+        Route::delete('{id}', [RecipientController::class, 'delete']);
     });
 });
 
