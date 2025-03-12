@@ -10,6 +10,7 @@ use App\Http\Controllers\API\SubscriptionController;
 use App\Http\Controllers\API\TicketController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\ArticleController;
+use App\Http\Controllers\API\TestimonialController;
 
 Route::prefix('auth')->group(function () {
     Route::post('link', [AuthController::class, 'link']);
@@ -83,6 +84,14 @@ Route::prefix('')->group(function () {
         Route::post('', [ArticleController::class, 'create']);
         Route::put('', [ArticleController::class, 'update']);
         Route::delete('{id}', [ArticleController::class, 'delete']);
+    });
+
+    Route::prefix('testimonials')->group(function () {
+        Route::get('', [TestimonialController::class, 'getAll']);
+        Route::get('{id}', [TestimonialController::class, 'get']);
+        Route::post('', [TestimonialController::class, 'create']);
+        Route::put('', [TestimonialController::class, 'update']);
+        Route::delete('{id}', [TestimonialController::class, 'delete']);
     });
 });
 
