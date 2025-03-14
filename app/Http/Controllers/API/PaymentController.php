@@ -13,7 +13,6 @@ class PaymentController extends Controller
     public $relations = ['user'];
 
     public $rules = [
-        'user_id' => 'required|exists:users,id',
         'reference' => 'required|max:255',
         'checkout' => 'required|max:255',
         'amount' => 'required|decimal:0,2',
@@ -45,7 +44,10 @@ class PaymentController extends Controller
 
     public function create(Request $request)
     {
+        $user_id = $request->header('user-id');
+
         $validated = $request->validate($this->rules);
+        $validated['user_id'] = $user_id;
 
         $record = Model::create($validated);
 
@@ -59,8 +61,11 @@ class PaymentController extends Controller
 
     public function update(Request $request)
     {
+        $user_id = $request->header('user-id');
+
         $this->rules['id'] = 'required|exists:payments,id';
         $validated = $request->validate($this->rules);
+        $validated['user_id'] = $user_id;
 
         $record = Model::find($validated['id']);
 
