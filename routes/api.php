@@ -12,6 +12,7 @@ use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\ChangeController;
 use App\Http\Controllers\API\RecipientController;
 use App\Http\Controllers\API\CustomTemplateController;
+use App\Http\Controllers\API\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,7 +80,7 @@ Route::middleware('auth.user')->group(function () {
 
     Route::prefix('changes')->group(function () {
         Route::get('by-month', [ChangeController::class, 'getAllByMonth']);
-        
+
         Route::get('', [ChangeController::class, 'getAll']);
         Route::get('{id}', [ChangeController::class, 'get']);
         Route::post('', [ChangeController::class, 'create']);
@@ -115,6 +116,16 @@ Route::middleware('auth.user')->group(function () {
         Route::post('', [CustomTemplateController::class, 'create']);
         Route::put('', [CustomTemplateController::class, 'update']);
         Route::delete('{id}', [CustomTemplateController::class, 'delete']);
+    });
+
+    Route::prefix('payments')->group(function () {
+        Route::post('set-status', [PaymentController::class, 'setStatus']);
+
+        Route::get('', [PaymentController::class, 'getAll']);
+        Route::get('{id}', [PaymentController::class, 'get']);
+        Route::post('', [PaymentController::class, 'create']);
+        Route::put('', [PaymentController::class, 'update']);
+        Route::delete('{id}', [PaymentController::class, 'delete']);
     });
 });
 
