@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('custom_templates', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('profile_id');
-            $table->string('background_color');
-            $table->string('text_color');
-            $table->string('font_family');
-            $table->string('card_color');
+            $table->string('background_color')->nullable();
+            $table->string('text_color')->nullable();
+            $table->string('font_family')->nullable();
+            $table->string('card_color')->nullable();
             $table->timestamps();
         });
     }

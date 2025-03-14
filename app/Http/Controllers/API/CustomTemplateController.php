@@ -14,10 +14,10 @@ class CustomTemplateController extends Controller
 
     public $rules = [
         'profile_id' => 'required|exists:profiles,id',
-        'background_color' => 'required|max:255',
-        'text_color' => 'required|max:255',
-        'font_family' => 'required|max:255',
-        'card_color' => 'required|max:255',
+        'background_color' => 'nullable|max:255',
+        'text_color' => 'nullable|max:255',
+        'font_family' => 'nullable|max:255',
+        'card_color' => 'nullable|max:255',
     ];
 
     public function getAll()
