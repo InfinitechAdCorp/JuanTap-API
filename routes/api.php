@@ -11,6 +11,7 @@ use App\Http\Controllers\API\TicketController;
 use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\ChangeController;
 use App\Http\Controllers\API\RecipientController;
+use App\Http\Controllers\API\CustomTemplateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,7 +106,15 @@ Route::middleware('auth.user')->group(function () {
         Route::get('{id}', [RecipientController::class, 'get']);
         Route::post('', [RecipientController::class, 'create']);
         Route::put('', [RecipientController::class, 'update']);
-        Route::delete('{id}', [SocialController::class, 'delete']);
+        Route::delete('{id}', [RecipientController::class, 'delete']);
+    });
+
+    Route::prefix('custom-templates')->group(function () {
+        Route::get('', [CustomTemplateController::class, 'getAll']);
+        Route::get('{id}', [CustomTemplateController::class, 'get']);
+        Route::post('', [CustomTemplateController::class, 'create']);
+        Route::put('', [CustomTemplateController::class, 'update']);
+        Route::delete('{id}', [CustomTemplateController::class, 'delete']);
     });
 });
 
