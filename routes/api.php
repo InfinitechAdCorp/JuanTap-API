@@ -10,6 +10,7 @@ use App\Http\Controllers\API\SubscriptionController;
 use App\Http\Controllers\API\TicketController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\ArticleController;
+use App\Http\Controllers\API\CustomTemplateController;
 use App\Http\Controllers\API\RecipientController;
 use App\Http\Controllers\API\TestimonialController;
 
@@ -102,8 +103,14 @@ Route::prefix('')->group(function () {
         Route::put('', [RecipientController::class, 'update']);
         Route::delete('{id}', [RecipientController::class, 'delete']);
     });
+
+    Route::prefix('custom-templates')->group(function () {
+        Route::get('', [CustomTemplateController::class, 'getAll']);
+        Route::get('{id}', [CustomTemplateController::class, 'get']);
+        Route::post('', [CustomTemplateController::class, 'create']);
+        Route::put('', [CustomTemplateController::class, 'update']);
+        Route::delete('{id}', [CustomTemplateController::class, 'delete']);
+    });
 });
 
-Route::prefix('user')->middleware('auth.user')->group(function () {
-    Route::post('templates', [TicketController::class, 'create']);
-});
+Route::prefix('user')->middleware('auth.user')->group(function () {});
