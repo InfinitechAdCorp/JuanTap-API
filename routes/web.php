@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\WebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,3 +13,5 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::post('webhook-receiver', [WebhookController::class, 'webhook'])->name('webhook');
