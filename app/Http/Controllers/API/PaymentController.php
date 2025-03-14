@@ -11,14 +11,15 @@ class PaymentController extends Controller
 {
     public $model = "Payment";
     public $relations = ['user'];
-    public $directory = "proofs";
 
     public $rules = [
         'user_id' => 'required|exists:users,id',
+        'reference' => 'required|max:255',
+        'checkout' => 'required|max:255',
         'amount' => 'required|decimal:0,2',
-        'reason' => 'required|max:255',
+        'remarks' => 'required|max:255',
         'method' => 'required|max:255',
-        'proof' => 'required',
+        'status' => 'required|max:255',
     ];
 
     public function getAll()
@@ -46,11 +47,6 @@ class PaymentController extends Controller
     {
         $validated = $request->validate($this->rules);
 
-        $key = 'proof';
-        if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($this->directory, $request->file($key));
-        }
-
         $record = Model::create($validated);
 
         $response = [
@@ -67,12 +63,6 @@ class PaymentController extends Controller
         $validated = $request->validate($this->rules);
 
         $record = Model::find($validated['id']);
-
-        $key = 'proof';
-        if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($this->directory, $request->file($key));
-        }
-
         $record->update($validated);
 
         $response = ['message' => "Updated $this->model", 'record' => $record];
