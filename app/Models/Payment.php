@@ -12,8 +12,8 @@ class Payment extends Model
 
     protected $fillable = [
         'user_id',
-        'reference',
-        'checkout',
+        'reference_number',
+        'checkout_url',
         'amount',
         'method',
         'remarks',

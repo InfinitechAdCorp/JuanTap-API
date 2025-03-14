@@ -13,8 +13,8 @@ class PaymentController extends Controller
     public $relations = ['user'];
 
     public $rules = [
-        'reference' => 'required|max:255',
-        'checkout' => 'required|max:255',
+        'reference_number' => 'required|max:255',
+        'checkout_url' => 'required|max:255',
         'amount' => 'required|decimal:0,2',
         'remarks' => 'required|max:255',
         'method' => 'required|max:255',
