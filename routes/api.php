@@ -129,6 +129,7 @@ Route::prefix('user')->middleware('auth.user')->group(function () {
     Route::get('changes-by-month', [UserController::class, 'getChangesByMonth']);
     Route::post('submit-ticket', [TicketController::class, 'create']);
     Route::get('track-ticket/{number}', [UserController::class, 'trackTicket']);
-    Route::get('view-template/{id}', [UserController::class, 'viewTemplate']);
     Route::post('subscribe-to-newsletter', [RecipientController::class, 'create']);
+    Route::get('view-template/{id}', [UserController::class, 'viewTemplate']);
+    Route::post('publish-template/{id}', [UserController::class, 'publishTemplate']);
 });

@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\User;
 use App\Models\Change;
 use App\Models\Ticket;
 use App\Models\Template;
+use App\Models\Collection;
 
 class UserController extends Controller
 {
@@ -43,12 +45,33 @@ class UserController extends Controller
         return response()->json($response, $code);
     }
 
-    public function viewTemplate($id) {
+    public function viewTemplate($id)
+    {
         $record = Template::find($id);
-        $record->update(['views' => $record['views']+1]);
+        $record->update(['views' => $record['views'] + 1]);
 
         $response = [
-            'message' => "Added View to Template",
+            'message' => "Updated Template",
+            'record' => $record,
+        ];
+        $code = 200;
+        return response()->json($response, $code);
+    }
+
+    public function publishTemplate(Request $request, $id)
+    {
+        $data = [
+            'template_id' => $id,
+            'user_id' => $request['user_id'],
+            'published' => 1,
+        ];
+
+        $user = User::find($data['user_id']);
+        $user->collections_templates()->update(['published' => 0]);
+        $record = Collection::updateOrcreate(['template_id' => $data['template_id'], 'user_id' => $data['user_id']], $data);
+
+        $response = [
+            'message' => "Updated Collection",
             'record' => $record,
         ];
         $code = 200;
