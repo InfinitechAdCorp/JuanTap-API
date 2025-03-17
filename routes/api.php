@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+
 use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\API\SocialController;
 use App\Http\Controllers\API\TemplateController;
@@ -13,6 +14,9 @@ use App\Http\Controllers\API\ArticleController;
 use App\Http\Controllers\API\CustomTemplateController;
 use App\Http\Controllers\API\RecipientController;
 use App\Http\Controllers\API\TestimonialController;
+use App\Http\Controllers\API\ChangeController;
+
+use App\Http\Controllers\UserController;
 
 Route::prefix('auth')->group(function () {
     Route::post('link', [AuthController::class, 'link']);
@@ -111,6 +115,18 @@ Route::prefix('')->group(function () {
         Route::put('', [CustomTemplateController::class, 'update']);
         Route::delete('{id}', [CustomTemplateController::class, 'delete']);
     });
+
+    Route::prefix('changes')->group(function () {
+        Route::get('', [ChangeController::class, 'getAll']);
+        Route::get('{id}', [ChangeController::class, 'get']);
+        Route::post('', [ChangeController::class, 'create']);
+        Route::put('', [ChangeController::class, 'update']);
+        Route::delete('{id}', [ChangeController::class, 'delete']);
+    });
 });
 
-Route::prefix('user')->middleware('auth.user')->group(function () {});
+Route::prefix('user')->middleware('auth.user')->group(function () {
+    Route::prefix('changes')->group(function () {
+        Route::get('by-month', [UserController::class, 'getChangesByMonth']);
+    });
+});
