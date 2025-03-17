@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('custom_templates', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('profile_id');
+            $table->foreignUlid('template_id');
+            $table->foreignUlid('user_id');
             $table->string('background_color');
             $table->string('text_color');
             $table->string('font_family');

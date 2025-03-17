@@ -10,10 +10,11 @@ use App\Models\CustomTemplate as Model;
 class CustomTemplateController extends Controller
 {
     public $model = "Custom Template";
-    public $relations = ['profile'];
+    public $relations = ['template', 'user'];
 
     public $rules = [
-        'profile_id' => 'required|exists:profiles,id',
+        'template_id' => 'required|exists:templates,id',
+        'user_id' => 'required|exists:users,id',
         'background_color' => 'required|max:255',
         'text_color' => 'required|max:255',
         'font_family' => 'required|max:255',

@@ -11,15 +11,21 @@ class CustomTemplate extends Model
     use HasFactory, HasUlids;
 
     protected $fillable = [
-        'profile_id',
+        'template_id',
+        'user_id',
         'background_color',
         'text_color',
         'font_family',
         'card_color',
     ];
 
-    public function profile()
+    public function template()
     {
-        return $this->belongsTo(Profile::class);
+        return $this->belongsTo(Template::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
