@@ -86,17 +86,17 @@ class PaymentController extends Controller
 
     public function setStatus(Request $request)
     {
-        $rules = [
-            'id' => 'required|exists:payments,id',
-            'status' => 'required|max:255',
-        ];
-        $validated = $request->validate($rules);
+        $payload = json_decode($request->getContent(), true);
+        $data = $payload["data"]["attributes"]["data"]["attributes"];
+        
+        $record = Model::where('reference_number', $data['external_reference_number']);
+        $record->update(["status" => $data["status"]]);
 
-        $record = Model::find($validated['id']);
-        $record->update($validated);
-
-        $response = ['message' => "Updated Status of $this->model", 'record' => $record];
         $code = 200;
+        $response = [
+            'message' => "Updated Status of $this->model",
+            'record' => $record,
+        ];
         return response()->json($response, $code);
     }
 }
