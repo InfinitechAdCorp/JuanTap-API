@@ -126,10 +126,12 @@ Route::prefix('')->group(function () {
 });
 
 Route::prefix('user')->middleware('auth.user')->group(function () {
-    Route::get('changes-by-month', [UserController::class, 'getChangesByMonth']);
-    Route::post('submit-ticket', [TicketController::class, 'create']);
-    Route::get('track-ticket/{number}', [UserController::class, 'trackTicket']);
-    Route::post('subscribe-to-newsletter', [RecipientController::class, 'create']);
-    Route::get('view-template/{id}', [UserController::class, 'viewTemplate']);
-    Route::post('publish-template/{id}', [UserController::class, 'publishTemplate']);
+    Route::get('changes/by-month', [UserController::class, 'getChangesByMonth']);
+    Route::post('tickets/submit', [TicketController::class, 'create']);
+    Route::get('tickets/track/{number}', [UserController::class, 'trackTicket']);
+    Route::post('recipients/subscribe', [RecipientController::class, 'create']);
+    Route::get('templates', [TemplateController::class, 'getAll']);
+    Route::get('templates/view/{id}', [UserController::class, 'viewTemplate']);
+    Route::post('templates/publish/{id}', [UserController::class, 'publishTemplate']);
+    Route::post('templates/favorite/{id}', [UserController::class, 'favoriteTemplate']);
 });

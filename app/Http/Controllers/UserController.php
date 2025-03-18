@@ -9,6 +9,7 @@ use App\Models\Change;
 use App\Models\Ticket;
 use App\Models\Template;
 use App\Models\Collection;
+use App\Models\Favorite;
 
 class UserController extends Controller
 {
@@ -75,6 +76,29 @@ class UserController extends Controller
             'record' => $record,
         ];
         $code = 200;
+        return response()->json($response, $code);
+    }
+
+    public function favoriteTemplate(Request $request, $id)
+    {
+        $data = [
+            'template_id' => $id,
+            'user_id' => $request['user_id'],
+        ];
+
+        $record = Favorite::where([['template_id', $data['template_id']], ['user_id', $data['user_id']]])->first();
+
+        if ($record) {
+            $record->delete();
+        } else {
+            $record = Favorite::create($data);
+        }
+
+        $response = [
+            'message' => "Updated Favorite",
+            'record' => $record,
+        ];
+        $code = 201;
         return response()->json($response, $code);
     }
 }
