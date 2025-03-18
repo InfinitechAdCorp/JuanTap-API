@@ -11,15 +11,14 @@ class PaymentController extends Controller
 {
     public $model = "Payment";
     public $relations = ['user'];
+    public $directory = "proofs";
 
     public $rules = [
         'user_id' => 'required|exists:users,id',
-        'reference_number' => 'required|max:255',
-        'checkout_url' => 'required|max:255',
         'amount' => 'required|decimal:0,2',
         'remarks' => 'required|max:255',
         'method' => 'required|max:255',
-        'status' => 'required|max:255',
+        'proof' => 'required',
     ];
 
     public function getAll()
@@ -47,6 +46,11 @@ class PaymentController extends Controller
     {
         $validated = $request->validate($this->rules);
 
+        $key = 'proof';
+        if ($request->hasFile($key)) {
+            $validated[$key] = $this->upload($this->directory, $request->file($key));
+        }
+
         $record = Model::create($validated);
 
         $response = [
@@ -63,6 +67,12 @@ class PaymentController extends Controller
         $validated = $request->validate($this->rules);
 
         $record = Model::find($validated['id']);
+
+        $key = 'proof';
+        if ($request->hasFile($key)) {
+            $validated[$key] = $this->upload($this->directory, $request->file($key));
+        }
+
         $record->update($validated);
 
         $response = ['message' => "Updated $this->model", 'record' => $record];
@@ -86,17 +96,17 @@ class PaymentController extends Controller
 
     public function setStatus(Request $request)
     {
-        $payload = json_decode($request->getContent(), true);
-        $data = $payload["data"]["attributes"]["data"]["attributes"];
-        
-        $record = Model::where('reference_number', $data['external_reference_number']);
-        $record->update(["status" => $data["status"]]);
-
-        $code = 200;
-        $response = [
-            'message' => "Updated Status of $this->model",
-            'record' => $record,
+        $rules = [
+            'id' => 'required|exists:payments,id',
+            'status' => 'required|max:255',
         ];
+        $validated = $request->validate($rules);
+
+        $record = Model::find($validated['id']);
+        $record->update($validated);
+
+        $response = ['message' => "Updated Status of $this->model", 'record' => $record];
+        $code = 200;
         return response()->json($response, $code);
     }
 }

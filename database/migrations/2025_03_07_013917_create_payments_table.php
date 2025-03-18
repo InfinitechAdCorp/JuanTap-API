@@ -14,12 +14,11 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id');
-            $table->string('reference_number');
-            $table->string('checkout_url');
             $table->decimal('amount', 15, 2);
-            $table->string('method');
             $table->string('remarks');
+            $table->string('method');
             $table->string('status');
+            $table->string('proof');
             $table->timestamps();
         });
     }
