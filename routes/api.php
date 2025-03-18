@@ -134,4 +134,5 @@ Route::prefix('user')->middleware('auth.user')->group(function () {
     Route::get('templates/view/{id}', [UserController::class, 'viewTemplate']);
     Route::post('templates/publish/{id}', [UserController::class, 'publishTemplate']);
     Route::post('templates/favorite/{id}', [UserController::class, 'favoriteTemplate']);
+    Route::post('settings/general', [UserController::class, 'generalSettings']);
 });

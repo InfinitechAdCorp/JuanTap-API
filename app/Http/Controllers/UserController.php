@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
 use App\Models\Change;
@@ -99,6 +100,51 @@ class UserController extends Controller
             'record' => $record,
         ];
         $code = 201;
+        return response()->json($response, $code);
+    }
+
+    public function generalSettings(Request $request)
+    {
+        $data = [
+            'user_id' => $request['user_id'],
+            'username' => $request['username'],
+            'email' => $request['email']
+        ];
+
+        $record = User::find($data['user_id']);
+        $record->update($data);
+
+        $response = ['message' => "Updated User", 'record' => $record];
+        $code = 200;
+        return response()->json($response, $code);
+    }
+
+    public function passwordSettings(Request $request)
+    {
+        $data = [
+            'user_id' => $request['user_id'],
+            'old' => $request['old'],
+            'new' => $request['new'],
+        ];
+
+        $isAuthorized = false;
+
+        $record = User::find($data['user_id']);
+        if ($record->password) {
+            $isValid = Hash::check($data['old'], $record->password);
+            $isValid ? $isAuthorized = true : $isAuthorized = false;
+        } else {
+            $isAuthorized = true;
+        }
+
+        if ($isAuthorized) {
+            $record->update(['password' => Hash::make($data['new'])]);
+            $response = ['message' => "Updated User", 'record' => $record];
+            $code = 200;
+        } else {
+            $response = ['message' => "Invalid Credentials"];
+            $code = 422;
+        }
         return response()->json($response, $code);
     }
 }
