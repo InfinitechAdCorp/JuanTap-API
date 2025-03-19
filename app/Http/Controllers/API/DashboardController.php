@@ -19,7 +19,10 @@ class DashboardController extends Controller
             'tickets' => Ticket::get()->count(),
         ];
 
-        $templates = Template::with('users_count')->get();
+        $templates = Template::with('collections_users')->get();
+        foreach ($templates as $template) {
+            $template['users_count'] = count($template['collections_users']);
+        }
 
         $response = ['message' => "Fetched Data", 'counts' => $counts, 'templates' => $templates];
         $code = 200;

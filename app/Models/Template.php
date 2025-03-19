@@ -50,9 +50,4 @@ class Template extends Model
     {
         return $this->belongsToMany(User::class, 'collections');
     }
-
-    public function users_count()
-    {
-        return $this->belongsToMany(User::class, 'collections')->count();
-    }
 }
