@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Traits\Uploadable;
 
 use App\Models\User;
 use App\Models\Change;
@@ -11,9 +12,13 @@ use App\Models\Ticket;
 use App\Models\Template;
 use App\Models\Collection;
 use App\Models\Favorite;
+use App\Models\Profile;
+use App\Models\Social;
 
 class UserController extends Controller
 {
+    use Uploadable;
+
     public function getChangesByMonth()
     {
         $records = Change::selectRaw('id, name, type, description, date, YEAR(date) year, MONTH(date) month')
@@ -145,6 +150,48 @@ class UserController extends Controller
             $response = ['message' => "Invalid Credentials"];
             $code = 422;
         }
+        return response()->json($response, $code);
+    }
+
+    public function profileSettings(Request $request)
+    {
+        $rules = [
+            'name' => 'required|max:255',
+            'address' => 'required|max:255',
+            'bio' => 'required',
+            'avatar' => 'nullable',
+            'socials' => 'nullable',
+        ];
+        $validated = $request->validate($rules);
+
+        $key = 'avatar';
+        if ($request->hasFile($key)) {
+            $validated[$key] = $this->upload($request->file($key), "avatars");
+        }
+
+        $record = Profile::updateOrCreate(
+            ['user_id' => $validated['user_id']],
+            $validated
+        );
+
+        $key = 'socials';
+        if ($validated[$key]) {
+            $record->socials()->delete();
+            foreach ($validated[$key] as $social) {
+                Social::create([
+                    'profile_id' => $record->id,
+                    'platform' => $social['platform'],
+                    'url' => $social['url'],
+                ]);
+            }
+        }
+
+        $action = $record->wasRecentlyCreated ? "Created" : "Updated";
+        $response = [
+            'message' => "$action Profile",
+            'record' => $record,
+        ];
+        $code = $action == "Created" ? 201 : 200;
         return response()->json($response, $code);
     }
 }

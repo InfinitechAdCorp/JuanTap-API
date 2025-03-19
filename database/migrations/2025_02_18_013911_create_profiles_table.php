@@ -15,7 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id');
             $table->string('name');
-            $table->string('location');
+            $table->string('address');
             $table->text('bio');
             $table->string('avatar');
             $table->timestamps();

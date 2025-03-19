@@ -19,7 +19,7 @@ class ProfileController extends Controller
     public $rules = [
         'user_id' => 'required|exists:users,id',
         'name' => 'required|max:255',
-        'location' => 'required|max:255',
+        'address' => 'required|max:255',
         'bio' => 'required',
         'avatar' => 'required',
     ];
