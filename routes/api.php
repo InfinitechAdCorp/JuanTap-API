@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 
+use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\API\SocialController;
 use App\Http\Controllers\API\TemplateController;
@@ -30,6 +31,10 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::prefix('')->group(function () {
+    Route::prefix('dashboard')->group(function () {
+        Route::get('get-counts', [DashboardController::class, 'getCounts']);
+    });
+
     Route::prefix('profiles')->group(function () {
         Route::get('', [ProfileController::class, 'getAll']);
         Route::get('{id}', [ProfileController::class, 'get']);
