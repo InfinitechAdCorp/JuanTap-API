@@ -9,7 +9,7 @@ use App\Models\Change as Model;
 
 class ChangeController extends Controller
 {
-    public $model = "Social";
+    public $model = "Change";
 
     public $rules = [
         'name' => 'required|max:255',

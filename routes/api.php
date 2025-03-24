@@ -141,6 +141,7 @@ Route::prefix('user')->middleware('auth.user')->group(function () {
     Route::get('templates/view/{id}', [UserController::class, 'viewTemplate']);
     Route::post('templates/publish/{id}', [UserController::class, 'publishTemplate']);
     Route::post('templates/favorite/{id}', [UserController::class, 'favoriteTemplate']);
+    Route::post('customizations/submit', [CustomizationController::class, 'create']);
     Route::post('settings/general', [UserController::class, 'generalSettings']);
     Route::post('settings/password', [UserController::class, 'passwordSettings']);
     Route::post('settings/profile', [UserController::class, 'profileSettings']);
@@ -148,4 +149,6 @@ Route::prefix('user')->middleware('auth.user')->group(function () {
 
 Route::prefix('guest')->group(function () {
     Route::get('templates', [TemplateController::class, 'getAll']);
+    Route::post('recipients/subscribe', [RecipientController::class, 'create']);
+    Route::get('changes/by-month', [UserController::class, 'getChangesByMonth']);
 });

@@ -82,7 +82,7 @@ class AuthController extends Controller
     public function signin(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required|email|max:255',
+            'email' => 'required|max:255|email',
             'password' => 'required|min:8|max:255',
         ]);
 
