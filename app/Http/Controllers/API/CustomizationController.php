@@ -5,11 +5,11 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\CustomTemplate as Model;
+use App\Models\Customization as Model;
 
-class CustomTemplateController extends Controller
+class CustomizationController extends Controller
 {
-    public $model = "Custom Template";
+    public $model = "Customization";
     public $relations = ['template', 'user'];
 
     public $rules = [

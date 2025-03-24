@@ -16,7 +16,6 @@ class Template extends Model
         'price',
         'views',
         'description',
-        'content',
         'thumbnail',
     ];
 

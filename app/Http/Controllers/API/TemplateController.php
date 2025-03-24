@@ -20,7 +20,6 @@ class TemplateController extends Controller
         'name' => 'required|max:255',
         'price' => 'required|decimal:0,2',
         'description' => 'required',
-        'content' => 'required',
         'thumbnail' => 'required',
     ];
 

@@ -13,44 +13,63 @@ use App\Models\Provider;
 class AuthController extends Controller
 {
     public $model = "User";
+    public $relations = ['provider', 'profile.socials', 'customizations_templates', 'collections_templates'];
 
-    public function link(Request $request)
+    public function get(Request $request)
     {
         $validated = $request->validate([
             'id' => 'required|max:255|exists:users,id',
-            'username' => 'nullable|max:255',
-            'password' => 'nullable|min:8|max:255',
-            'role' => 'nullable|max:255',
-            'name' => 'required|max:255',
-            'account_id' => 'required|max:255',
-            'access_token' => 'required|max:255',
         ]);
 
-        $record = Model::find($validated['id']);
-        $validated['user_id'] = $record->id;
-
-        $record->update($validated);
-        Provider::updateOrCreate(['user_id' => $validated['user_id']], $validated);
-
-        $response = [
-            'message' => "Account Linked",
-            'record' => $record,
-        ];
+        $record = Model::with($this->relations)->where('id', $validated['id'])->first();
+        $response = ['message' => "Fetched $this->model", 'record' => $record];
         $code = 200;
         return response()->json($response, $code);
     }
 
-    public function signupByCredentials(Request $request)
+    public function getByEmail(Request $request)
     {
         $validated = $request->validate([
-            'username' => 'nullable|max:255',
-            'email' => 'required|max:255|email|unique:users,email',
-            'password' => 'required|min:8|max:255',
-            'role' => 'nullable|max:255',
+            'email' => 'required|max:255|exists:users,email',
         ]);
-        $validated['password'] = Hash::make($validated['password']);
+
+        $record = Model::with($this->relations)->where('email', $validated['email'])->first();
+        $response = ['message' => "Fetched $this->model", 'record' => $record];
+        $code = 200;
+        return response()->json($response, $code);
+    }
+
+    public function signup(Request $request)
+    {
+        $rules = [
+            'username' => 'nullable|max:255|unique:users,username',
+            'email' => 'required|max:255|email|unique:users,email',
+            'role' => 'nullable|max:255',
+        ];
+        $name = strtolower($request->name);
+
+        if ($name == 'credentials') {
+            $rules = [...$rules, 'password' => 'required|min:8|max:255'];
+        } else {
+            $rules = [
+                ...$rules,
+                'password' => 'nullable|min:8|max:255',
+                'name' => 'required|max:255',
+                'account_id' => 'required|max:255',
+                'access_token' => 'required|max:255',
+            ];
+        }
+
+        $validated = $request->validate($rules);
+        if ($name == 'credentials') {
+            $validated['password'] = Hash::make($validated['password']);
+        }
 
         $record = Model::create($validated);
+
+        if ($name == 'google') {
+            Provider::create([...$validated, 'user_id' => $record->id]);
+        }
 
         $response = [
             'message' => "Created $this->model",
@@ -60,79 +79,25 @@ class AuthController extends Controller
         return response()->json($response, $code);
     }
 
-    public function upsert(Request $request)
-    {
-        $name = strtolower($request->name);
-
-        if ($name == "google") {
-            $validated = $request->validate([
-                'username' => 'nullable|max:255',
-                'email' => 'required|max:255|email',
-                'password' => 'nullable|min:8|max:255',
-                'role' => 'nullable|max:255',
-                'name' => 'required|max:255',
-                'account_id' => 'required|max:255',
-                'access_token' => 'required|max:255',
-            ]);
-        } else {
-            $validated = $request->validate([
-                'username' => 'nullable|max:255',
-                'email' => 'required|max:255|email',
-                'password' => 'required|min:8|max:255',
-                'role' => 'nullable|max:255',
-                'name' => 'required|max:255',
-            ]);
-            $validated['password'] = Hash::make($validated['password']);
-        }
-
-        $record = Model::updateOrCreate(
-            ['email' => $validated['email']],
-            $validated
-        );
-
-        if ($name) {
-            $validated['user_id'] = $record->id;
-            Provider::updateOrCreate(
-                ['user_id' => $record->id],
-                $validated,
-            );
-        }
-
-        $action = $record->wasRecentlyCreated ? "Created" : "Updated";
-        $response = [
-            'message' => "$action $this->model",
-            'record' => $record,
-        ];
-        $code = $action == "Created" ? 201 : 200;
-        return response()->json($response, $code);
-    }
-
-    public function login(Request $request)
+    public function signin(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:8',
+            'email' => 'required|email|max:255',
+            'password' => 'required|min:8|max:255',
         ]);
 
-        $record = Model::where('email', $validated['email'])->first();
-        $isValid = Hash::check($validated['password'], $record->password);
+        $record = Model::with($this->relations)->where('email', $validated['email'])->first();
+        $isValid = $record ? Hash::check($validated['password'], $record->password) : false;
 
-        if ($record && $isValid) {
-            $response = [
-                'message' => 'Logged In Successfully',
-                'record' => $record,
-            ];
-            $code = 200;
-        } else {
-            $response = [
-                'message' => 'Invalid Credentials',
-            ];
-            $code = 401;
-        }
+        $response = [
+            'message' => $isValid ? 'Logged In Successfully' : 'Invalid Credentials',
+            'record' => $isValid ? $record : null,
+        ];
+        $code = $isValid ? 200 : 401;
         return response()->json($response, $code);
     }
 
-    public function logout(Request $request)
+    public function signout(Request $request)
     {
         $record = PersonalAccessToken::findToken($request->bearerToken())->tokenable;
         PersonalAccessToken::where('tokenable_id', $record->id)->delete();

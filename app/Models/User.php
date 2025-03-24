@@ -42,13 +42,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Template::class, 'favorites');
     }
 
-    public function collections_templates()
-    {
-        return $this->belongsToMany(Template::class, 'collections')->withPivot('published');
+    public function customizations_templates() {
+        return $this->belongsToMany(Template::class, 'customizations');
     }
 
-    public function published_template()
+    public function collections_templates()
     {
-        return $this->belongsToMany(Template::class, 'collections')->withPivot('published')->wherePivot('published', 1);
+        return $this->belongsToMany(Template::class, 'collections')->withPivot('is_published');
     }
 }

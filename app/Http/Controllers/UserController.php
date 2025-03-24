@@ -70,11 +70,11 @@ class UserController extends Controller
         $data = [
             'template_id' => $id,
             'user_id' => $request['user_id'],
-            'published' => 1,
+            'is_published' => 1,
         ];
 
         $user = User::find($data['user_id']);
-        $user->collections_templates()->update(['published' => 0]);
+        $user->collections_templates()->update(['is_published' => 0]);
         $record = Collection::updateOrcreate(['template_id' => $data['template_id'], 'user_id' => $data['user_id']], $data);
 
         $response = [

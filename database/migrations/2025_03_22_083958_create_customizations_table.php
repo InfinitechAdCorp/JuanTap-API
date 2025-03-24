@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('custom_templates', function (Blueprint $table) {
+        Schema::create('customizations', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('template_id');
             $table->foreignUlid('user_id');
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('custom_templates');
+        Schema::dropIfExists('customizations');
     }
 };

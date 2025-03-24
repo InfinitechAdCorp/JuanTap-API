@@ -12,21 +12,23 @@ use App\Http\Controllers\API\SubscriptionController;
 use App\Http\Controllers\API\TicketController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\ArticleController;
-use App\Http\Controllers\API\CustomTemplateController;
 use App\Http\Controllers\API\RecipientController;
 use App\Http\Controllers\API\TestimonialController;
 use App\Http\Controllers\API\ChangeController;
+use App\Http\Controllers\API\CustomizationController;
 
 use App\Http\Controllers\UserController;
 
 Route::prefix('auth')->group(function () {
-    Route::post('link', [AuthController::class, 'link']);
-    Route::post('signup', [AuthController::class, 'signupByCredentials']);
-    Route::put('', [AuthController::class, 'upsert']);
-    Route::post('login', [AuthController::class, 'login']);
+    Route::post('get', [AuthController::class, 'get']);
+    Route::post('get-by-email', [AuthController::class, 'getByEmail']);
 
-    Route::middleware('auth.user')->group(function () {
-        Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('link', [AuthController::class, 'link']);
+    Route::post('signup', [AuthController::class, 'signup']);
+    Route::post('signin', [AuthController::class, 'signin']);
+
+    Route::middleware('auth.admin')->group(function () {
+        Route::post('signout', [AuthController::class, 'signout']);
     });
 });
 
@@ -113,12 +115,12 @@ Route::prefix('')->group(function () {
         Route::delete('{id}', [RecipientController::class, 'delete']);
     });
 
-    Route::prefix('custom-templates')->group(function () {
-        Route::get('', [CustomTemplateController::class, 'getAll']);
-        Route::get('{id}', [CustomTemplateController::class, 'get']);
-        Route::post('', [CustomTemplateController::class, 'create']);
-        Route::put('', [CustomTemplateController::class, 'update']);
-        Route::delete('{id}', [CustomTemplateController::class, 'delete']);
+    Route::prefix('customizations')->group(function () {
+        Route::get('', [CustomizationController::class, 'getAll']);
+        Route::get('{id}', [CustomizationController::class, 'get']);
+        Route::post('', [CustomizationController::class, 'create']);
+        Route::put('', [CustomizationController::class, 'update']);
+        Route::delete('{id}', [CustomizationController::class, 'delete']);
     });
 
     Route::prefix('changes')->group(function () {
@@ -142,4 +144,8 @@ Route::prefix('user')->middleware('auth.user')->group(function () {
     Route::post('settings/general', [UserController::class, 'generalSettings']);
     Route::post('settings/password', [UserController::class, 'passwordSettings']);
     Route::post('settings/profile', [UserController::class, 'profileSettings']);
+});
+
+Route::prefix('guest')->group(function () {
+    Route::get('templates', [TemplateController::class, 'getAll']);
 });
