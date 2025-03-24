@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('address');
             $table->text('bio');
-            $table->string('avatar');
+            $table->string('avatar')->nullable();
             $table->timestamps();
         });
     }

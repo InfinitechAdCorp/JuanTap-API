@@ -19,9 +19,7 @@ class User extends Authenticatable
         'role',
     ];
 
-    protected $hidden = [
-        'password'
-    ];
+    protected $hidden = [];
 
     protected $attributes = [
         'role' => 'User'
@@ -42,7 +40,8 @@ class User extends Authenticatable
         return $this->belongsToMany(Template::class, 'favorites');
     }
 
-    public function customizations_templates() {
+    public function customizations_templates()
+    {
         return $this->belongsToMany(Template::class, 'customizations');
     }
 

@@ -113,7 +113,6 @@ class UserController extends Controller
         $data = [
             'user_id' => $request['user_id'],
             'username' => $request['username'],
-            'email' => $request['email']
         ];
 
         $record = User::find($data['user_id']);
@@ -136,8 +135,7 @@ class UserController extends Controller
 
         $record = User::find($data['user_id']);
         if ($record->password) {
-            $isValid = Hash::check($data['old'], $record->password);
-            $isValid ? $isAuthorized = true : $isAuthorized = false;
+            $isAuthorized = Hash::check($data['old'], $record->password);
         } else {
             $isAuthorized = true;
         }
@@ -156,35 +154,23 @@ class UserController extends Controller
     public function profileSettings(Request $request)
     {
         $rules = [
+            'user_id' => 'required|exists:users,id',
             'name' => 'required|max:255',
             'address' => 'required|max:255',
             'bio' => 'required',
             'avatar' => 'nullable',
-            'socials' => 'nullable',
         ];
         $validated = $request->validate($rules);
 
         $key = 'avatar';
         if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($request->file($key), "avatars");
+            $validated[$key] = $this->upload("avatars", $request->file($key));
         }
 
         $record = Profile::updateOrCreate(
             ['user_id' => $validated['user_id']],
             $validated
         );
-
-        $key = 'socials';
-        if ($validated[$key]) {
-            $record->socials()->delete();
-            foreach ($validated[$key] as $social) {
-                Social::create([
-                    'profile_id' => $record->id,
-                    'platform' => $social['platform'],
-                    'url' => $social['url'],
-                ]);
-            }
-        }
 
         $action = $record->wasRecentlyCreated ? "Created" : "Updated";
         $response = [
