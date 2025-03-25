@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->ulid('id')->primary();
+            $table->foreignUlid('template_id');
             $table->foreignUlid('user_id');
-            $table->decimal('amount', 15, 2);
             $table->string('remarks');
             $table->string('method');
             $table->string('status');

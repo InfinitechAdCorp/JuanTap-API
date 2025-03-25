@@ -12,8 +12,8 @@ class Payment extends Model
     use HasFactory, HasUlids;
 
     protected $fillable = [
+        'template_id',
         'user_id',
-        'amount',
         'remarks',
         'method',
         'status',
@@ -27,7 +27,7 @@ class Payment extends Model
     public static function booted()
     {
         self::updated(function (Payment $record): void {
-            $directory = "proofs";
+            $directory = "payments";
             $key  = "proof";
             if ($record->wasChanged($key)) {
                 Storage::disk('s3')->delete("$directory/" . $record->getOriginal($key));
@@ -35,7 +35,7 @@ class Payment extends Model
         });
 
         self::deleted(function (Payment $record): void {
-            $directory = "proofs";
+            $directory = "payments";
             $key  = "proof";
             Storage::disk('s3')->delete("$directory/" . $record[$key]);
         });

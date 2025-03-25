@@ -11,11 +11,11 @@ class PaymentController extends Controller
 {
     public $model = "Payment";
     public $relations = ['user'];
-    public $directory = "proofs";
+    public $directory = "payments";
 
     public $rules = [
+        'template_id' => 'required|exists:templates,id',
         'user_id' => 'required|exists:users,id',
-        'amount' => 'required|decimal:0,2',
         'remarks' => 'required|max:255',
         'method' => 'required|max:255',
         'proof' => 'required',
