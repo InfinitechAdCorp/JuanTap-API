@@ -7,11 +7,12 @@ use Illuminate\Http\Request;
 use App\Traits\Uploadable;
 
 use App\Models\Payment as Model;
+use App\Models\Collection;
 
 class PaymentController extends Controller
 {
     use Uploadable;
-    
+
     public $model = "Payment";
     public $relations = ['user'];
     public $directory = "payments";
@@ -107,6 +108,10 @@ class PaymentController extends Controller
 
         $record = Model::find($validated['id']);
         $record->update($validated);
+
+        if ($validated['status'] == "Accepted") {
+            Collection::create([...$record->toArray(), "is_published" => 0]);
+        }
 
         $response = ['message' => "Updated Status of $this->model", 'record' => $record];
         $code = 200;
