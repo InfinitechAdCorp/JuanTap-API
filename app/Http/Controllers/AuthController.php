@@ -96,14 +96,4 @@ class AuthController extends Controller
         $code = $isValid ? 200 : 401;
         return response()->json($response, $code);
     }
-
-    public function signout(Request $request)
-    {
-        $record = PersonalAccessToken::findToken($request->bearerToken())->tokenable;
-        PersonalAccessToken::where('tokenable_id', $record->id)->delete();
-
-        $response = ['message' => 'Logged Out Successfully'];
-        $code = 200;
-        return response()->json($response, $code);
-    }
 }

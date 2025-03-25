@@ -13,9 +13,8 @@ use App\Models\Template;
 use App\Models\Collection;
 use App\Models\Favorite;
 use App\Models\Profile;
-use App\Models\Social;
 
-class UserController extends Controller
+class UserSideController extends Controller
 {
     use Uploadable;
 

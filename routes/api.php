@@ -16,8 +16,9 @@ use App\Http\Controllers\API\RecipientController;
 use App\Http\Controllers\API\TestimonialController;
 use App\Http\Controllers\API\ChangeController;
 use App\Http\Controllers\API\CustomizationController;
+use App\Http\Controllers\API\UserController;
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserSideController;
 
 Route::prefix('auth')->group(function () {
     Route::post('get', [AuthController::class, 'get']);
@@ -26,15 +27,16 @@ Route::prefix('auth')->group(function () {
     Route::post('link', [AuthController::class, 'link']);
     Route::post('signup', [AuthController::class, 'signup']);
     Route::post('signin', [AuthController::class, 'signin']);
-
-    Route::middleware('auth.admin')->group(function () {
-        Route::post('signout', [AuthController::class, 'signout']);
-    });
 });
 
-Route::prefix('')->group(function () {
+Route::prefix('')->middleware('auth.user')->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('get-counts', [DashboardController::class, 'getCounts']);
+    });
+
+    Route::prefix('users')->group(function () {
+        Route::get('', [UserController::class, 'getAll']);
+        Route::get('{id}', [UserController::class, 'get']);
     });
 
     Route::prefix('profiles')->group(function () {
@@ -133,22 +135,22 @@ Route::prefix('')->group(function () {
 });
 
 Route::prefix('user')->middleware('auth.user')->group(function () {
-    Route::get('changes/by-month', [UserController::class, 'getChangesByMonth']);
+    Route::get('changes/by-month', [UserSideController::class, 'getChangesByMonth']);
     Route::post('tickets/submit', [TicketController::class, 'create']);
-    Route::get('tickets/track/{number}', [UserController::class, 'trackTicket']);
+    Route::get('tickets/track/{number}', [UserSideController::class, 'trackTicket']);
     Route::post('recipients/subscribe', [RecipientController::class, 'create']);
     Route::get('templates', [TemplateController::class, 'getAll']);
-    Route::get('templates/view/{id}', [UserController::class, 'viewTemplate']);
-    Route::post('templates/publish/{id}', [UserController::class, 'publishTemplate']);
-    Route::post('templates/favorite/{id}', [UserController::class, 'favoriteTemplate']);
+    Route::get('templates/view/{id}', [UserSideController::class, 'viewTemplate']);
+    Route::post('templates/publish/{id}', [UserSideController::class, 'publishTemplate']);
+    Route::post('templates/favorite/{id}', [UserSideController::class, 'favoriteTemplate']);
     Route::post('customizations/submit', [CustomizationController::class, 'create']);
-    Route::post('settings/general', [UserController::class, 'generalSettings']);
-    Route::post('settings/password', [UserController::class, 'passwordSettings']);
-    Route::post('settings/profile', [UserController::class, 'profileSettings']);
+    Route::post('settings/general', [UserSideController::class, 'generalSettings']);
+    Route::post('settings/password', [UserSideController::class, 'passwordSettings']);
+    Route::post('settings/profile', [UserSideController::class, 'profileSettings']);
 });
 
 Route::prefix('guest')->group(function () {
     Route::get('templates', [TemplateController::class, 'getAll']);
     Route::post('recipients/subscribe', [RecipientController::class, 'create']);
-    Route::get('changes/by-month', [UserController::class, 'getChangesByMonth']);
+    Route::get('changes/by-month', [UserSideController::class, 'getChangesByMonth']);
 });
