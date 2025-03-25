@@ -49,4 +49,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Template::class, 'collections')->withPivot('is_published');
     }
+
+    public function payments_templates()
+    {
+        return $this->belongsToMany(Template::class, 'payments')->withPivot(['remarks', 'method', 'status', 'proof']);
+    }
 }

@@ -147,6 +147,7 @@ Route::prefix('user')->middleware('auth.user')->group(function () {
     Route::post('settings/general', [UserSideController::class, 'generalSettings']);
     Route::post('settings/password', [UserSideController::class, 'passwordSettings']);
     Route::post('settings/profile', [UserSideController::class, 'profileSettings']);
+    Route::post('payments/submit', [PaymentController::class, 'create']);
 });
 
 Route::prefix('guest')->group(function () {

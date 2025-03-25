@@ -13,7 +13,7 @@ use App\Models\Provider;
 class AuthController extends Controller
 {
     public $model = "User";
-    public $relations = ['provider', 'profile.socials', 'customizations_templates', 'collections_templates'];
+    public $relations = ['provider', 'profile.socials', 'customizations_templates', 'collections_templates', 'payments_templates'];
 
     public function get(Request $request)
     {

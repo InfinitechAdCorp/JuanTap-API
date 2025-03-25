@@ -4,11 +4,14 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Traits\Uploadable;
 
 use App\Models\Payment as Model;
 
 class PaymentController extends Controller
 {
+    use Uploadable;
+    
     public $model = "Payment";
     public $relations = ['user'];
     public $directory = "payments";

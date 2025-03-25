@@ -40,9 +40,4 @@ class Payment extends Model
             Storage::disk('s3')->delete("$directory/" . $record[$key]);
         });
     }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 }
