@@ -13,7 +13,7 @@ class AuthenticateUser
         $id = $request->header('user-id');
         $record = User::find($id);
         if ($record) {
-            if ($request->isMethod('post') || $request->isMethod('put')) {
+            if (($request->isMethod('post') || $request->isMethod('put')) && $record->role == "User") {
                 $request->request->add(['user_id' => $id]);
             }
             return $next($request);
